@@ -1,1 +1,2 @@
-print "as"
+put("")
+get("")
