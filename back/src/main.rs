@@ -48,7 +48,7 @@ fn main() {
         }
         else
         {
-            send("~lose");
+            send("~lose$");
         }
     }
 }
