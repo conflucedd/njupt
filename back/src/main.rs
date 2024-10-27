@@ -1,4 +1,3 @@
-
 fn main() {
     let message: String;
     let mut size: i32;
