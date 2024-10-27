@@ -1,43 +1,49 @@
+use back::*;
+use std::process::exit;
 fn main() {
-    let message: String;
-    let mut size: i32;
-    let mut checkerboard;
+    let mut message: String;
+    let mut checkerboard = Checkerboard::new(0);
 
     loop  {
         message = recv();
         println!("{}", &message); // for debug
-        match &message {
+        match message.as_str() {
             "~start" => {
-                size = extract_size(message);
-                checkerboard = checkerboard_new(size);
+                let size = extract_size(message);
+                checkerboard = Checkerboard::new(size);
                 send("~OK$");
                 continue;
             }
             "~click" => {
-                let (i, j) = extract_position(message);
-                if checkerboard[i][j].thunder == true {
+                let (x, y) = extract_position(message);
+                if checkerboard.areas[x][y].thunder == true {
                     send("~lose$");
                 }
-                else {
-                    auto_expand(&mut checkerboard);
+                else  {
+                    checkerboard.areas[x][y].click = Status::Known;
+                    if checkerboard.areas[x][y].property == 0 {
+                        auto_expand(&mut checkerboard, x, y);
+                    }
+                    send(&checkerboard.to_string());
                 }
-                continue;
             }
             "~mark" => {
-                let position = extract_position(message);
-                checkerboard[i][j].click = Area::Marked;
-                continue;
+                let (x, y) = extract_position(message);
+                checkerboard.areas[x][y].click = Status::Marked;
             }
             "~abort" => {
                 send("~OK$");
                 continue;
             }
             "~stop$" => {
-                exit();
+                exit(0);
+            }
+            &_ => {
+                exit(0);
             }
         }
 
-        if check_win(&mut checkerboard)
+        if check_win(&checkerboard)
         {
             send("~win$");
         }
