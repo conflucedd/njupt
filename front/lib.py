@@ -1,3 +1,6 @@
+import time
+import os
+
 # unpack the message we get
 def unpack_message(s, n, list):
     if s == "~OK$":
@@ -20,3 +23,20 @@ def unpack_message(s, n, list):
             for j in range(n):
                 m[i][j] = s[x]
                 x = x + 1
+
+def send(s):
+    print("H")
+    while (os.path.exists("/tmp/send")):     
+        time.sleep(0.1)
+    print(s)
+    a = open("/tmp/send", 'w')
+    a.write(s)
+
+def recv():
+    while (os.path.exists("/tmp/recv") == False):     
+        time.sleep(0.1)
+    a = open("/tmp/recv", 'rw')
+    s = a.read()
+    print(s)
+    os.remove(a)
+    return s

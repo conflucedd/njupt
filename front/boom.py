@@ -1,6 +1,5 @@
 from tkinter import *
 import lib
-import io
 
 # game page
 def open_game_page(c):
@@ -80,8 +79,8 @@ def open_game_page(c):
 
     def left_click(event, row, col):
         button = event.widget
-        io.send("~click" + str(row) + "," + str(col) + "$")
-        s = io.recv()
+        lib.send("~click" + str(row) + "," + str(col) + "$")
+        s = lib.recv()
         map = lib.unpack_message(s, c, judge_list)
 
         # win
@@ -97,8 +96,8 @@ def open_game_page(c):
 
     def right_click(event, row, col):
         button = event.widget
-        io.send("~mark" + str(row) + "," + str(col) + "$")
-        s = io.recv()
+        lib.send("~mark" + str(row) + "," + str(col) + "$")
+        s = lib.recv()
         map = lib.unpack_message(s, c, judge_list)
         # update the current map
         for i in range(c):

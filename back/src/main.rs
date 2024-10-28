@@ -60,7 +60,7 @@ fn main() {
                 exit(0);
             }
             &_ => {
-                exit(0);
+                exit(1);
             }
         }
 
