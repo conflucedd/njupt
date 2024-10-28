@@ -58,9 +58,9 @@ def open_game_page(c):
     # draw the map
     for i in range(c):
         for j in range(c):
-            button_states[(i, j)] = '9'
-            btn = Button(frame, width = 1, height = 1)
-            btn.config(text = '9')
+            button_states[(i, j)] = ' '
+            btn = Button(frame, width = 1, height = 1, font= ("Arial", 20))
+            btn.config(text = ' ')
             btn.grid(row = i, column = j)
 
             btn.bind("<Button-1>", lambda event, x=i, y=j: left_click(event, x, y))
@@ -72,9 +72,9 @@ def open_game_page(c):
         for i in range(c):
             for j in range(c):
                 if button_states[(i, j)] == '9':
-                    buttons[(i, j)].config(text = '9')
+                    buttons[(i, j)].config(text = ' ')
                 elif button_states[(i, j)] == '0':
-                    buttons[(i, j)].config(text = '0')
+                    buttons[(i, j)].config(text = ' ')
                 elif button_states[(i, j)] == '@':
                     buttons[(i, j)].config(text = '@')
                 else:

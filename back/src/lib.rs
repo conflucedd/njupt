@@ -234,7 +234,7 @@ pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
 }
 
 pub fn expand(checkerboard: &mut Checkerboard, a: &mut VecDeque<(usize, usize)>) -> () {
-    let (x, y) = a.pop_back().unwrap();
+    let (x, y) = a.pop_front().unwrap();
     if x >= 1 && checkerboard.areas[x - 1][y].thunder == false && checkerboard.areas[x - 1][y].click == Status::Unclicked {
         checkerboard.areas[x - 1][y].click = Status::Known;
         
@@ -242,10 +242,10 @@ pub fn expand(checkerboard: &mut Checkerboard, a: &mut VecDeque<(usize, usize)>)
             a.push_back((x - 1, y));
         }
     }
-    if y >= 1 && checkerboard.areas[x][y - 1].thunder == false {
+    if y >= 1 && checkerboard.areas[x][y - 1].thunder == false && checkerboard.areas[x][y - 1].click == Status::Unclicked {
         checkerboard.areas[x][y - 1].click = Status::Known;
         
-        if checkerboard.areas[x][y - 1].property == 0 && checkerboard.areas[x][y - 1].click == Status::Unclicked {
+        if checkerboard.areas[x][y - 1].property == 0 {
             a.push_back((x, y - 1));
         }
     }
@@ -263,7 +263,6 @@ pub fn expand(checkerboard: &mut Checkerboard, a: &mut VecDeque<(usize, usize)>)
             a.push_back((x + 1, y));
         }
     }
-    a.pop_front().unwrap();
 }
 
 pub fn auto_expand2(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
