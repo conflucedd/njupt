@@ -45,7 +45,7 @@ impl Checkerboard {
         for _x in 0..size {
             let mut vec = Vec::new();
             for _y in 0..size {
-                let a = Area::new(Status::Unclicked, Self::thunder_random(5));
+                let a = Area::new(Status::Unclicked, Self::thunder_random(0));
                 vec.push(a);
             }
             checkerboard.areas.push(vec);
@@ -134,6 +134,7 @@ impl Checkerboard {
 }
 
 pub fn send(a: &str) -> () {
+    println!("sending: {}", a);
     loop {
         if fs::exists("/tmp/recv").unwrap() == true {
             thread::sleep(Duration::from_millis(100));
@@ -143,10 +144,11 @@ pub fn send(a: &str) -> () {
     }
     fs::write("/tmp/recv", a).unwrap();
     // for debug
-    println!("{}", a);
+    println!("send complete");
 }
 
 pub fn recv() -> String {
+    println!("reciving");
     loop {
         if fs::exists("/tmp/send").unwrap() == false {
             thread::sleep(Duration::from_millis(100));
@@ -157,8 +159,6 @@ pub fn recv() -> String {
 
     let message = fs::read_to_string("/tmp/send").unwrap();
     fs::remove_file("/tmp/send").unwrap();
-    // for debug
-    println!("{}", &message);
     message
 }
 

@@ -1,6 +1,6 @@
 from tkinter import *
 import lib
-
+import numpy
 # game page
 def open_game_page(c):
     # hide the start page
@@ -50,10 +50,12 @@ def open_game_page(c):
     # 0 is null, 1~8 is number, 9 is unclicked, @ is marked
     button_states = {}
     buttons = {}
-    judge_list = [2, 2]
-    map = [[0] * c for _ in range(c)]
+    map = numpy.zeros((c, c))
 
+    #start
     lib.send("~start" + str(c) + "$")
+    lib.recv()
+
     # draw the map
     for i in range(c):
         for j in range(c):
@@ -82,24 +84,37 @@ def open_game_page(c):
         button = event.widget
         lib.send("~click" + str(row) + "," + str(col) + "$")
         s = lib.recv()
-        map = lib.unpack_message(s, c, judge_list)
 
-        # win
-        if judge_list[1] == 1:
+        if s == "~win$":
+        # you win
             sign_page("you win!!!")
-        # lose
-        if judge_list[1] == 0:
-            sign_page("you lose...")             
+        elif s == "~lost$":
+        # you lose
+            sign_page("you lose...")
+        else:
+            #map = numpy.zeros(c, c)
+            x = 1
+            for i in range(c):
+                for j in range(c):
+                    map[i][j] = s[x]
+                    x += 1
+           
         # update the current map
+        button_states[(i, j)] = map[i][j]
         update_button_state()
 
     def right_click(event, row, col):
         button = event.widget
         lib.send("~mark" + str(row) + "," + str(col) + "$")
         s = lib.recv()
-        map = lib.unpack_message(s, c, judge_list)
-        
+        x = 1
+        for i in range(c):
+            for j in range(c):
+                map[i][j] = s[x]
+                x += 1
+                
         # update the current map
+        button_states[(i, j)] = map[i][j]
         update_button_state()
 
     # when close the game page, open the start page

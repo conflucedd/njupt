@@ -1,7 +1,9 @@
 import time
 import os
+import numpy
 
 # unpack the message we get
+'''
 def unpack_message(s, n, list):
     if s == "~OK$":
         # continue
@@ -16,17 +18,17 @@ def unpack_message(s, n, list):
         list[1] = 0
     
     else:
-        rows = n, cols = n
-        array = [[0] * cols for _ in range(rows)]
+        array = numpy.zeros(n, n)
         x = 1
-        list2 = s.split()
         for i in range(n):
             for j in range(n):
                 array[i][j] = s[x]
                 x = x + 1
-
+        
+        print(array)
+        return array
+'''
 def send(s):
-    print("H")
     while (os.path.exists("/tmp/send")):     
         time.sleep(0.1)
     print(s)

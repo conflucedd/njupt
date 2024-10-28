@@ -6,7 +6,7 @@ fn main() {
 
     loop  {
         message = recv();
-        println!("{}", &message); // for debug
+        println!("message: {}", &message); // for debug
         match message.as_str() {
             s if s.starts_with("~start") => {
                 let size = extract_size(message);
