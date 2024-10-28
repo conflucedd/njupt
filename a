@@ -13,7 +13,7 @@
 
 前端接收内容
 "~" + "OK" + "$"
-"~"+ 状态 + "strnumber" + , + "strnumber" + , + "strnumber" + ... + "$"
+"~"+ 状态 + "strnumber" + , + "strnumber" + , + "strnumber提示数字" + ... + "$"
 "~" + "win" + "$"
 "~" + "lost" + "$"
 状态

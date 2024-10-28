@@ -8,11 +8,11 @@ enum ClickType {
 
 struct Area {
     click: ClickType,
-    thunder: bool
+    property_number: i32 // -1 means thunder, 0 means void, others means hint number
 }
 
 impl Area {
-    
+
 }
 
 fn send(a: String) -> () {
