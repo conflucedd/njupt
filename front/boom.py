@@ -36,12 +36,12 @@ def open_game_page(c):
             
             def left_click(event, r, c):
                 button = event.widget
-                send("~click" + str(r) + ", " + str(c) + "$")
+                send("~click" + str(r) + "," + str(c) + "$")
                 s = recv()
 
             def right_click(event, r, c):
                 button = event.widget
-                send("~mark" + str(r) + ", " + str(c) + "$")
+                send("~mark" + str(r) + "," + str(c) + "$")
                 s = recv()
 
             btn.bind("<Button-1>", lambda event, x=i, y=j: left_click(event, x, y))
