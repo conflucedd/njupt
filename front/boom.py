@@ -74,11 +74,11 @@ def open_game_page(c):
                 if button_states[(i, j)] == '9':
                     buttons[(i, j)].config(text = ' ')
                 elif button_states[(i, j)] == '0':
-                    buttons[(i, j)].config(text = ' ')
+                    buttons[(i, j)].config(text = ' ', bg = 'yellow')
                 elif button_states[(i, j)] == '@':
                     buttons[(i, j)].config(text = '@')
                 else:
-                    buttons[(i, j)].config(text = button_states[(i, j)])
+                    buttons[(i, j)].config(text = button_states[(i, j)], bg = 'yellow')
 
     def left_click(event, row, col):
         button = event.widget

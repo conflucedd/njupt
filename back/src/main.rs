@@ -56,6 +56,7 @@ fn main() {
                     send(&checkerboard.to_string());
                     continue;
                 }
+                send(&checkerboard.to_string());
             }
             s if s.starts_with("~abort") => {
                 send("~OK$");
