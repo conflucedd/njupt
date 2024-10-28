@@ -1,0 +1,22 @@
+传输头
+"~start"
+"~click_left"
+"~click_right"
+"~abort"
+
+前端发送内容
+"start": "$" # end sign
+"click" int4byte, int4byte + "$" # 坐标
+"mark" int4byte, int4byte + "$" # 坐标
+"abort": "$" # end sign
+
+前端接收
+"~"+ 状态 + int4byte + int4byte "$"'
+"~" + "win" + "$"
+"~" + "lost" + "$"
+状态
+"unclicked"
+"marked"
+"known"
+
+
