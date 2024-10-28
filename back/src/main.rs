@@ -1,7 +1,7 @@
 fn main() {
     let message: String;
     let mut size: i32;
-    let mut checkerboard: Vec<Vec<Area>> = Vec::new();
+    let mut checkerboard;
 
     loop  {
         message = recv();
@@ -9,20 +9,13 @@ fn main() {
         match &message {
             "~start" => {
                 size = extract_size(message);
-                for i in size {
-                    let mut vec = Vec::new();
-                    for j in size{
-                        let a = Area::Unclicked;
-                        vec.push(a);
-                    }
-                    checkerboard.push(vec);
-                }
+                checkerboard = checkerboard_new(size);
                 send("~OK$");
                 continue;
             }
             "~click" => {
-                let position = extract_position(message);
-                if boom(position) {
+                let (i, j) = extract_position(message);
+                if checkerboard[i][j] == {
                     send
                 }
                 else {
