@@ -16,12 +16,13 @@ def unpack_message(s, n, list):
         list[1] = 0
     
     else:
-        m = [[0 for i in range(n)] for i in range(n)]
+        rows = n, cols = n
+        array = [[0] * cols for _ in range(rows)]
         x = 1
         list2 = s.split()
         for i in range(n):
             for j in range(n):
-                m[i][j] = s[x]
+                array[i][j] = s[x]
                 x = x + 1
 
 def send(s):
@@ -35,8 +36,8 @@ def send(s):
 def recv():
     while (os.path.exists("/tmp/recv") == False):     
         time.sleep(0.1)
-    a = open("/tmp/recv", 'rw')
+    a = open("/tmp/recv", 'r')
     s = a.read()
     print(s)
-    os.remove(a)
+    os.remove("/tmp/recv")
     return s

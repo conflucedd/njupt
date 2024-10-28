@@ -51,7 +51,7 @@ def open_game_page(c):
     button_states = {}
     buttons = {}
     judge_list = [2, 2]
-    map = [[0 for i in range(c)] for i in range(c)]
+    map = [[0] * c for _ in range(c)]
 
     lib.send("~start" + str(c) + "$")
     # draw the map
@@ -91,19 +91,16 @@ def open_game_page(c):
         if judge_list[1] == 0:
             sign_page("you lose...")             
         # update the current map
-        for i in range(c):
-            for j in range(c):
-                button_states[(i, j)] = map[i][j]
+        update_button_state()
 
     def right_click(event, row, col):
         button = event.widget
         lib.send("~mark" + str(row) + "," + str(col) + "$")
         s = lib.recv()
         map = lib.unpack_message(s, c, judge_list)
+        
         # update the current map
-        for i in range(c):
-            for j in range(c):
-                button_states[(i, j)] = map[i][j]
+        update_button_state()
 
     # when close the game page, open the start page
     def on_close():
