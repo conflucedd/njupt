@@ -10,6 +10,7 @@ pub enum Status {
     Unclicked,
     Marked,
     Known,
+    Special
 }
 
 pub struct Area {
@@ -89,9 +90,40 @@ impl Checkerboard {
         a.push('~');
         for i in 0..self.size {
             for j in 0..self.size {
+                if self.areas[i][j].click == Status::Marked {
+                    a.push_str("@");
+                }
                 if self.areas[i][j].click == Status::Unclicked {
                     a.push_str("9");
-                } else {
+                }
+                if self.areas[i][j].click == Status::Known {
+                    a.push_str(&self.areas[i][j].property.to_string());
+                }
+            }
+        }
+        a.push('$');
+        a
+    }
+
+    pub fn to_string_at_fail(&self) -> String {
+        let mut a = String::new();
+        a.push('~');
+        for i in 0..self.size {
+            for j in 0..self.size {
+                if self.areas[i][j].click == Status::Special {
+                    a.push_str("s");
+                    continue;
+                }
+                if self.areas[i][j].thunder == true {
+                    a.push_str("t");
+                }
+                if self.areas[i][j].click == Status::Marked {
+                    a.push_str("@");
+                }
+                if self.areas[i][j].click == Status::Unclicked {
+                    a.push_str("9");
+                }
+                if self.areas[i][j].click == Status::Known {
                     a.push_str(&self.areas[i][j].property.to_string());
                 }
             }

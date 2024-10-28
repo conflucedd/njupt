@@ -22,6 +22,10 @@ fn main() {
                 }
                 if checkerboard.areas[x][y].thunder == true && checkerboard.first == false {
                     send("~lose$");
+                    checkerboard.areas[x][y].click = Status::Special;
+                    // todo: send lose map
+                    // send(&checkerboard.to_string_at_fail());
+                    continue;
                 }
                 if checkerboard.areas[x][y].thunder == true && checkerboard.first == true {
                     loop {
@@ -41,7 +45,12 @@ fn main() {
             }
             "~mark" => {
                 let (x, y) = extract_position(message);
-                checkerboard.areas[x][y].click = Status::Marked;
+                if checkerboard.areas[x][y].click == Status::Unclicked {
+                    checkerboard.areas[x][y].click = Status::Marked;
+                };
+                if checkerboard.areas[x][y].click == Status::Marked {
+                    checkerboard.areas[x][y].click = Status::Unclicked
+                }
             }
             "~abort" => {
                 send("~OK$");
