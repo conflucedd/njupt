@@ -50,8 +50,7 @@ def open_game_page(c):
     # 0 is null, 1~8 is number, 9 is unclicked, @ is marked
     button_states = {}
     buttons = {}
-    map = numpy.zeros((c, c))
-
+    map = [[0 for x in range(c)] for y in range(c)] 
     #start
     lib.send("~start" + str(c) + "$")
     lib.recv()
@@ -59,8 +58,9 @@ def open_game_page(c):
     # draw the map
     for i in range(c):
         for j in range(c):
-            button_states[(i, j)] = 9
+            button_states[(i, j)] = '9'
             btn = Button(frame, width = 1, height = 1)
+            btn.config(text = '9')
             btn.grid(row = i, column = j)
 
             btn.bind("<Button-1>", lambda event, x=i, y=j: left_click(event, x, y))
@@ -71,12 +71,12 @@ def open_game_page(c):
     def update_button_state():
         for i in range(c):
             for j in range(c):
-                if button_states[(i, j)] == 9:
-                    buttons[(i, j)].config(text = "")
-                elif button_states[(i, j)] == 0:
-                    buttons[(i, j)].config(text = "0")
-                elif button_states[(i, j)] == "@":
-                    buttons[(i, j)].config(text = "@")
+                if button_states[(i, j)] == '9':
+                    buttons[(i, j)].config(text = '9')
+                elif button_states[(i, j)] == '0':
+                    buttons[(i, j)].config(text = '0')
+                elif button_states[(i, j)] == '@':
+                    buttons[(i, j)].config(text = '@')
                 else:
                     buttons[(i, j)].config(text = button_states[(i, j)])
 
@@ -92,7 +92,6 @@ def open_game_page(c):
         # you lose
             sign_page("you lose...")
         else:
-            #map = numpy.zeros(c, c)
             x = 1
             for i in range(c):
                 for j in range(c):
@@ -100,7 +99,9 @@ def open_game_page(c):
                     x += 1
            
         # update the current map
-        button_states[(i, j)] = map[i][j]
+        for i in range(c):
+            for j in range(c):
+                button_states[(i, j)] = map[i][j]
         update_button_state()
 
     def right_click(event, row, col):
@@ -114,7 +115,9 @@ def open_game_page(c):
                 x += 1
                 
         # update the current map
-        button_states[(i, j)] = map[i][j]
+        for i in range(c):
+            for j in range(c):
+                button_states[(i, j)] = map[i][j]
         update_button_state()
 
     # when close the game page, open the start page

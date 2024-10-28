@@ -45,7 +45,7 @@ impl Checkerboard {
         for _x in 0..size {
             let mut vec = Vec::new();
             for _y in 0..size {
-                let a = Area::new(Status::Unclicked, Self::thunder_random(0));
+                let a = Area::new(Status::Unclicked, Self::thunder_random(10));
                 vec.push(a);
             }
             checkerboard.areas.push(vec);
@@ -235,7 +235,7 @@ pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
 
 pub fn expand(checkerboard: &mut Checkerboard, a: &mut VecDeque<(usize, usize)>) -> () {
     let (x, y) = a.pop_back().unwrap();
-    if x >= 1 && checkerboard.areas[x - 1][y].thunder == false {
+    if x >= 1 && checkerboard.areas[x - 1][y].thunder == false && checkerboard.areas[x - 1][y].click == Status::Unclicked {
         checkerboard.areas[x - 1][y].click = Status::Known;
         
         if checkerboard.areas[x - 1][y].property == 0 {
@@ -245,18 +245,18 @@ pub fn expand(checkerboard: &mut Checkerboard, a: &mut VecDeque<(usize, usize)>)
     if y >= 1 && checkerboard.areas[x][y - 1].thunder == false {
         checkerboard.areas[x][y - 1].click = Status::Known;
         
-        if checkerboard.areas[x][y - 1].property == 0 {
+        if checkerboard.areas[x][y - 1].property == 0 && checkerboard.areas[x][y - 1].click == Status::Unclicked {
             a.push_back((x, y - 1));
         }
     }
-    if y + 1 < checkerboard.size && checkerboard.areas[x][y + 1].thunder == false {
+    if y + 1 < checkerboard.size && checkerboard.areas[x][y + 1].thunder == false && checkerboard.areas[x][y + 1].click == Status::Unclicked {
         checkerboard.areas[x][y + 1].click = Status::Known;
         
         if checkerboard.areas[x][y + 1].property == 0 {
             a.push_back((x, y + 1));
         }
     }
-    if x + 1 < checkerboard.size && checkerboard.areas[x + 1][y].thunder == false {
+    if x + 1 < checkerboard.size && checkerboard.areas[x + 1][y].thunder == false && checkerboard.areas[x + 1][y].click == Status::Unclicked {
         checkerboard.areas[x + 1][y].click = Status::Known;
         
         if checkerboard.areas[x + 1][y].property == 0 {

@@ -47,9 +47,13 @@ fn main() {
                 let (x, y) = extract_position(message);
                 if checkerboard.areas[x][y].click == Status::Unclicked {
                     checkerboard.areas[x][y].click = Status::Marked;
+                    send(&checkerboard.to_string());
+                    continue;
                 };
                 if checkerboard.areas[x][y].click == Status::Marked {
-                    checkerboard.areas[x][y].click = Status::Unclicked
+                    checkerboard.areas[x][y].click = Status::Unclicked;
+                    send(&checkerboard.to_string());
+                    continue;
                 }
             }
             s if s.starts_with("~abort") => {
