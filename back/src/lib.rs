@@ -1,17 +1,18 @@
 use std::fs;
 use rand::prelude::random;
-use std::iter::Peekable;
+use std::{thread, time::Duration};
+
 #[derive(PartialEq)]
-enum Status {
+pub enum Status {
     Unclicked,
     Marked,
     Known,
 }
 
-struct Area {
-    click: Status,
-    thunder: bool,
-    property: i32 // hint number
+pub struct Area {
+    pub click: Status,
+    pub thunder: bool,
+    pub property: i32 // hint number
 }
 
 impl Area {
@@ -24,13 +25,13 @@ impl Area {
     }
 }
 
-struct Checkerboard {
-    areas: Vec<Vec<Area>>,
-    size: usize
+pub struct Checkerboard {
+    pub areas: Vec<Vec<Area>>,
+    pub size: usize
 }
 
 impl Checkerboard {
-    fn new(size: usize) -> Self {
+    pub fn new(size: usize) -> Self {
         let mut checkerboard = Checkerboard {
             areas: Vec::new(),
             size
@@ -70,18 +71,47 @@ impl Checkerboard {
         };
         checkerboard
     }
+
+    pub fn to_string(&self) -> String {
+        let mut a = String::new();
+        a.push('~');
+        for i in 1..self.size + 1 {
+            for j in 1..self.size +1 {
+                a.push_str(&self.areas[i][j].property.to_string());
+                a.push(',');
+            }
+        }
+        a.push('$');
+        a
+    }
 }
 
-fn send(a: String) -> () {
-    // message = fs::read_to_string("/tmp/a").unwrap();
+pub fn send(a: &str) -> () {
+    loop {
+        if fs::exists("/tmp/send").unwrap() == true {
+            thread::sleep(Duration::from_millis(500));
+        } else {
+            break;
+        }
+    }
+    fs::write("/tmp/recv", &a).unwrap();
 }
 
-fn recv() -> String {
-    // message = fs::read_to_string("/tmp/a").unwrap();
+pub fn recv() -> String {
+    loop {
+        if fs::exists("/tmp/send").unwrap() == false {
+            thread::sleep(Duration::from_millis(500));
+        } else {
+            break;
+        }
+    }
+
+    let message = fs::read_to_string("/tmp/send").unwrap();
+    fs::remove_file("/tmp/send").unwrap();
+    message
 }
 
-
-fn extract_size(a: String) -> i32 {
+pub fn extract_size(a: String) -> usize {
     let str_itr = a.chars();
     let mut num: String = String::new();
     for c in str_itr {
@@ -95,7 +125,7 @@ fn extract_size(a: String) -> i32 {
     num.parse().unwrap()
 }
 
-fn extract_position(mut a: String) -> (i32, i32) {
+pub fn extract_position(a: String) -> (usize, usize) {
     let str_itr = a.chars();
     let mut x: String = String::new();
     let mut y: String = String::new();
@@ -117,15 +147,26 @@ fn extract_position(mut a: String) -> (i32, i32) {
             y.push(c)
         }
     }
-    
+
     (x.parse().unwrap(), y.parse().unwrap())
 }
 
-fn auto_expand(mut checkreboard: Checkerboard, x: i32, y: i32) -> () {
+pub fn auto_expand(checkreboard: &mut Checkerboard, x: usize, y: usize) -> () {
 
+
+
+
+
+
+
+
+
+
+
+    
 }
 
-fn check_win(mut checkreboard: Checkerboard) -> bool {
+pub fn check_win(checkreboard: &Checkerboard) -> bool {
     for x in 1..checkreboard.size + 1 {
         for y in 1..checkreboard.size + 1 {
             if checkreboard.areas[x][y].thunder == true && checkreboard.areas[x][y].click != Status::Marked {

@@ -1,43 +1,46 @@
+use back::*;
+use std::process::exit;
 fn main() {
     let mut message: String;
-    let mut checkerboard;
+    let mut checkerboard = Checkerboard::new(0);
 
     loop  {
         message = recv();
         println!("{}", &message); // for debug
         match message.as_str() {
             "~start" => {
-                size = extract_size(message);
-                checkerboard = checkerboard::new(size);
+                let size = extract_size(message);
+                checkerboard = Checkerboard::new(size);
                 send("~OK$");
                 continue;
             }
             "~click" => {
                 let (x, y) = extract_position(message);
-                if checkerboard.areas[i][j].thunder == true {
+                if checkerboard.areas[x][y].thunder == true {
                     send("~lose$");
                 }
                 else {
-                    auto_expand(&mut checkerboard);
-                    send(&mut checkerboard)
+                    auto_expand(&mut checkerboard, x, y);
+                    send(&checkerboard.to_string());
                 }
-                continue;
             }
             "~mark" => {
                 let (x, y) = extract_position(message);
-                checkerboard.areas[x][y].click = Area::Marked;
-                continue;
+                checkerboard.areas[x][y].click = Status::Marked;
             }
             "~abort" => {
                 send("~OK$");
                 continue;
             }
             "~stop$" => {
-                exit();
+                exit(0);
+            }
+            &_ => {
+                exit(0);
             }
         }
 
-        if check_win(&mut checkerboard)
+        if check_win(&checkerboard)
         {
             send("~win$");
         }
