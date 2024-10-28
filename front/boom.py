@@ -28,13 +28,24 @@ def open_game_page(c):
             btn = Button(frame, width = 1, height = 1)
             btn.grid(row = i, column = j)
             
-            def left_click(event):
+            def left_click(event, r, c):
                 button = event.widget
-            def right_click(event):
-                button = event.widget
+                send("~click" + str(r) + ", " + str(c) + "$")
+                s = recv()
 
-            btn.bind("<Button-1>", left_click)
-            btn.bind("<Button-3>", right_click)
+            def right_click(event, r, c):
+                button = event.widget
+                send("~mark" + str(r) + ", " + str(c) + "$")
+                s = recv()
+
+            btn.bind("<Button-1>", lambda event, x=i, y=j: left_click(event, x, y))
+            btn.bind("<Button-3>", lambda event, x=i, y=j: right_click(event, x, y))
+
+    def send(s):
+        print(s)
+    
+    def recv():
+        return
 
     # when close the game page, open the start page
     def on_close():

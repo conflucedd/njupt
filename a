@@ -6,7 +6,7 @@
 "~stop"
 前端发送内容
 "start": "strsize" + "$" # end sign
-"click" + "strnumber" + , "strnumber" + "$" # 坐标
+"click" + "strnumber" +  ,"strnumber" + "$" # 坐标
 "mark" + "strnumber" + , "strnumber" + "$"
 "abort": "$"
 "~stop" + "$" // 后端退出
