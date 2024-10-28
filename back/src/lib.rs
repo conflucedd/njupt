@@ -1,18 +1,25 @@
 use std::fs;
-
-enum ClickType {
+use rand::prelude::random;
+enum Status {
     Unclicked,
     Marked,
     Known,
 }
 
 struct Area {
-    click: ClickType,
-    property_number: i32 // -1 means thunder, 0 means void, others means hint number
+    click: Status,
+    thunder: bool,
+    property: i32 // hint number
 }
 
 impl Area {
-
+    fn new(click: Status, thunder: bool) -> Self {
+        Area {
+            click,
+            thunder,
+            property: 0
+        }
+    }
 }
 
 fn send(a: String) -> () {
@@ -24,21 +31,21 @@ fn recv() -> String {
 }
 
 
+fn extract_size(a: String) -> i32 {
+
+}
+
 fn checkerboard_new(size: i32) -> Vec<Vec<Area>> {
-    let mut checkerboard
-    for i in size {
+    let mut checkerboard: Vec<Vec<Area>> = Vec::new();
+    for i in 0..size {
         let mut vec = Vec::new();
-        for j in size{
-            let a = Area::Unclicked;
+        for j in 0..size{
+            let a = Area::new(Status::Unclicked, random::<bool>());
             vec.push(a);
         }
         checkerboard.push(vec);
     }
     checkerboard
-}
-
-fn extract_size(a: String) -> i32 {
-
 }
 
 fn extract_position(a: String) -> (i32, i32) {

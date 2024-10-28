@@ -5,7 +5,7 @@ fn main() {
 
     loop  {
         message = recv();
-        println!("{}", message); // for debug
+        println!("{}", &message); // for debug
         match &message {
             "~start" => {
                 size = extract_size(message);
@@ -15,32 +15,31 @@ fn main() {
             }
             "~click" => {
                 let (i, j) = extract_position(message);
-                if checkerboard[i][j] == {
-                    send
+                if checkerboard[i][j].thunder == true {
+                    send("~lose$");
                 }
                 else {
-                    auto_expand(checkerboard);
+                    auto_expand(&mut checkerboard);
                 }
                 continue;
             }
             "~mark" => {
                 let position = extract_position(message);
-                checkerboard[i][j] = Area::Marked;
+                checkerboard[i][j].click = Area::Marked;
                 continue;
             }
             "~abort" => {
                 send("~OK$");
                 continue;
             }
+            "~stop$" => {
+                exit();
+            }
         }
 
-        if check_win(checkerboard)
+        if check_win(&mut checkerboard)
         {
             send("~win$");
-        }
-        else
-        {
-            send("~lose$");
         }
     }
 }
