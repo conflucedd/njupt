@@ -22,6 +22,12 @@ def open_game_page(c):
     gp.grid_rowconfigure(0, weight = 1)
     gp.grid_columnconfigure(0, weight = 1)
 
+    from enum import Enum
+    class state(Enum):
+        unclicked = 0
+        clicked = 1
+        marked = 2
+
     # draw the map
     for i in range(c):
         for j in range(c):
