@@ -1,5 +1,6 @@
 from tkinter import *
 import lib
+import io
 
 # game page
 def open_game_page(c):
@@ -65,10 +66,22 @@ def open_game_page(c):
 
             buttons[(i, j)] = btn
 
+    def update_button_state():
+        for i in range(c):
+            for j in range(c):
+                if button_states[(i, j)] == 9:
+                    buttons[(i, j)].config(text = "")
+                elif button_states[(i, j)] == 0:
+                    buttons[(i, j)].config(text = "0")
+                elif button_states[(i, j)] == "@":
+                    buttons[(i, j)].config(text = "@")
+                else:
+                    buttons[(i, j)].config(text = button_states[(i, j)])
+
     def left_click(event, row, col):
         button = event.widget
-        send("~click" + str(row) + "," + str(col) + "$")
-        s = recv()
+        io.send("~click" + str(row) + "," + str(col) + "$")
+        s = io.recv()
         map = lib.unpack_message(s, c, judge_list)
 
         # win
@@ -82,22 +95,15 @@ def open_game_page(c):
             for j in range(c):
                 button_states[(i, j)] = map[i][j]
 
-    def right_click(event, r, c):
+    def right_click(event, row, col):
         button = event.widget
-        send("~mark" + str(r) + "," + str(c) + "$")
-        s = recv()
+        io.send("~mark" + str(row) + "," + str(col) + "$")
+        s = io.recv()
         map = lib.unpack_message(s, c, judge_list)
         # update the current map
         for i in range(c):
             for j in range(c):
                 button_states[(i, j)] = map[i][j]
-
-
-    def send(s):
-        print(s)
-    
-    def recv():
-        return "~1$"
 
     # when close the game page, open the start page
     def on_close():

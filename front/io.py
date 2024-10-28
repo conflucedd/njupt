@@ -1,4 +1,5 @@
 import time
+import os
 
 def send(s):
     while (os.path.exists("/tmp/send")):     
@@ -9,7 +10,7 @@ def send(s):
 
 
 def recv():
-    while (os.path.exists("/tmp/recv") == false):     
+    while (os.path.exists("/tmp/recv") == False):     
         time.sleep(0.1)
     a = open("/tmp/recv", 'rw')
     s = a.read()
