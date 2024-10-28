@@ -53,6 +53,7 @@ def open_game_page(c):
     judge_list = [2, 2]
     map = [[0 for i in range(c)] for i in range(c)]
 
+    lib.send("~start" + str(c) + "$")
     # draw the map
     for i in range(c):
         for j in range(c):
