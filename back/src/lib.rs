@@ -135,7 +135,7 @@ impl Checkerboard {
 
 pub fn send(a: &str) -> () {
     loop {
-        if fs::exists("/tmp/send").unwrap() == true {
+        if fs::exists("/tmp/recv").unwrap() == true {
             thread::sleep(Duration::from_millis(100));
         } else {
             break;
