@@ -19,8 +19,11 @@ fn main() {
                 if checkerboard.areas[x][y].thunder == true {
                     send("~lose$");
                 }
-                else {
-                    auto_expand(&mut checkerboard, x, y);
+                else  {
+                    checkerboard.areas[x][y].click = Status::Known;
+                    if checkerboard.areas[x][y].property == 0 {
+                        auto_expand(&mut checkerboard, x, y);
+                    }
                     send(&checkerboard.to_string());
                 }
             }
