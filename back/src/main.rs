@@ -1,31 +1,31 @@
 fn main() {
-    let message: String;
-    let mut size: i32;
+    let mut message: String;
     let mut checkerboard;
 
     loop  {
         message = recv();
         println!("{}", &message); // for debug
-        match &message {
+        match message.as_str() {
             "~start" => {
                 size = extract_size(message);
-                checkerboard = checkerboard_new(size);
+                checkerboard = checkerboard::new(size);
                 send("~OK$");
                 continue;
             }
             "~click" => {
-                let (i, j) = extract_position(message);
-                if checkerboard[i][j].thunder == true {
+                let (x, y) = extract_position(message);
+                if checkerboard.areas[i][j].thunder == true {
                     send("~lose$");
                 }
                 else {
                     auto_expand(&mut checkerboard);
+                    send(&mut checkerboard)
                 }
                 continue;
             }
             "~mark" => {
-                let position = extract_position(message);
-                checkerboard[i][j].click = Area::Marked;
+                let (x, y) = extract_position(message);
+                checkerboard.areas[x][y].click = Area::Marked;
                 continue;
             }
             "~abort" => {
