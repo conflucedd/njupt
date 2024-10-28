@@ -42,6 +42,11 @@ fn main() {
                 if checkerboard.areas[x][y].property == 0 {
                     auto_expand2(&mut checkerboard, x, y);
                 }
+                if check_win(&checkerboard)
+                {
+                    send("~win$");
+                    continue;
+                };
                 send(&checkerboard.to_string());
             }
             s if s.starts_with("~mark") => {
@@ -68,11 +73,6 @@ fn main() {
             &_ => {
                 exit(1);
             }
-        }
-
-        if check_win(&checkerboard)
-        {
-            send("~win$");
         }
     }
 }

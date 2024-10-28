@@ -45,7 +45,7 @@ impl Checkerboard {
         for _x in 0..size {
             let mut vec = Vec::new();
             for _y in 0..size {
-                let a = Area::new(Status::Unclicked, Self::thunder_random(10));
+                let a = Area::new(Status::Unclicked, Self::thunder_random(1));
                 vec.push(a);
             }
             checkerboard.areas.push(vec);
