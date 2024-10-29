@@ -56,21 +56,21 @@ impl Checkerboard {
                     checkerboard.areas[x][y].property = -1;
                 }
                 else  {
-                    if checkerboard.areas[x - 1][y - 1].thunder == true && x >= 1 && y >= 1
+                    if x >= 1 && y >= 1 && checkerboard.areas[x - 1][y - 1].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if checkerboard.areas[x - 1][y].thunder == true && x >= 1
+                    if x >= 1 && checkerboard.areas[x - 1][y].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if checkerboard.areas[x - 1][y + 1].thunder == true && x >= 1  && y + 1 < size
+                    if x >= 1  && y + 1 < size && checkerboard.areas[x - 1][y + 1].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if checkerboard.areas[x][y - 1].thunder == true && y >= 1
+                    if y >= 1 && checkerboard.areas[x][y - 1].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if checkerboard.areas[x][y + 1].thunder == true && y + 1 < size
+                    if y + 1 < size && checkerboard.areas[x][y + 1].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if checkerboard.areas[x + 1][y - 1].thunder == true && x + 1 < size && y >= 1 && y - 1 < size
+                    if x + 1 < size && y >= 1 && checkerboard.areas[x + 1][y - 1].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if checkerboard.areas[x + 1][y].thunder == true && x + 1 < size
+                    if x + 1 < size && checkerboard.areas[x + 1][y].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if checkerboard.areas[x + 1][y + 1].thunder == true && x + 1 < size && y >= 1 && y + 1 < size
+                    if x + 1 < size && y + 1 < size && checkerboard.areas[x + 1][y + 1].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
                 }
             }
@@ -203,28 +203,28 @@ pub fn extract_position(a: String) -> (usize, usize) {
 }
 
 pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
-    if checkerboard.areas[x - 1][y].thunder == false && x >= 1 {
+    if x >= 1 && checkerboard.areas[x - 1][y].thunder == false {
         checkerboard.areas[x - 1][y].click = Status::Known;
         
         if checkerboard.areas[x - 1][y].property == 0 {
             auto_expand(checkerboard, x - 1, y)
         }
     }
-    if checkerboard.areas[x][y - 1].thunder == false && y >= 1 {
+    if y >= 1 && checkerboard.areas[x][y - 1].thunder == false {
         checkerboard.areas[x][y - 1].click = Status::Known;
         
         if checkerboard.areas[x][y - 1].property == 0 {
             auto_expand(checkerboard, x, y - 1)
         }
     }
-    if checkerboard.areas[x][y + 1].thunder == false && y + 1 < checkerboard.size {
+    if y + 1 < checkerboard.size && checkerboard.areas[x][y + 1].thunder == false {
         checkerboard.areas[x][y + 1].click = Status::Known;
         
         if checkerboard.areas[x][y + 1].property == 0 {
             auto_expand(checkerboard, x, y + 1)
         }
     }
-    if checkerboard.areas[x + 1][y].thunder == false && x +1 < checkerboard.size {
+    if x + 1 < checkerboard.size && checkerboard.areas[x + 1][y].thunder == false {
         checkerboard.areas[x + 1][y].click = Status::Known;
         
         if checkerboard.areas[x + 1][y].property == 0 {
@@ -235,28 +235,28 @@ pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
 
 pub fn expand(checkerboard: &mut Checkerboard, a: &mut VecDeque<(usize, usize)>) -> () {
     let (x, y) = a.pop_back().unwrap();
-    if checkerboard.areas[x - 1][y].thunder == false && x >= 1 {
+    if x >= 1 && checkerboard.areas[x - 1][y].thunder == false {
         checkerboard.areas[x - 1][y].click = Status::Known;
         
         if checkerboard.areas[x - 1][y].property == 0 {
             a.push_back((x - 1, y));
         }
     }
-    if checkerboard.areas[x][y - 1].thunder == false && y >= 1 {
+    if y >= 1 && checkerboard.areas[x][y - 1].thunder == false {
         checkerboard.areas[x][y - 1].click = Status::Known;
         
         if checkerboard.areas[x][y - 1].property == 0 {
             a.push_back((x, y - 1));
         }
     }
-    if checkerboard.areas[x][y + 1].thunder == false && y + 1 < checkerboard.size {
+    if y + 1 < checkerboard.size && checkerboard.areas[x][y + 1].thunder == false {
         checkerboard.areas[x][y + 1].click = Status::Known;
         
         if checkerboard.areas[x][y + 1].property == 0 {
             a.push_back((x, y + 1));
         }
     }
-    if checkerboard.areas[x + 1][y].thunder == false && x +1 < checkerboard.size {
+    if x + 1 < checkerboard.size && checkerboard.areas[x + 1][y].thunder == false {
         checkerboard.areas[x + 1][y].click = Status::Known;
         
         if checkerboard.areas[x + 1][y].property == 0 {
