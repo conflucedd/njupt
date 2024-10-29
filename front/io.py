@@ -16,4 +16,3 @@ def recv():
     print(s)
     os.remove(a)
     return s
-    
