@@ -32,7 +32,7 @@ fn main() {
                 
                 checkerboard.areas[x][y].click = Status::Known;
                 if checkerboard.areas[x][y].property == 0 {
-                    auto_expand(&mut checkerboard, x, y);
+                    auto_expand2(&mut checkerboard, x, y);
                 }
                 send(&checkerboard.to_string());
             }
