@@ -16,16 +16,25 @@ fn main() {
             }
             "~click" => {
                 let (x, y) = extract_position(message);
-                if checkerboard.areas[x][y].thunder == true {
+                
+                if checkerboard.areas[x][y].thunder == true && checkerboard.first == false {
                     send("~lose$");
                 }
-                else  {
-                    checkerboard.areas[x][y].click = Status::Known;
-                    if checkerboard.areas[x][y].property == 0 {
-                        auto_expand(&mut checkerboard, x, y);
+                if checkerboard.areas[x][y].thunder == true && checkerboard.first == true {
+                    loop {
+                        checkerboard = Checkerboard::new(checkerboard.size);
+                        if checkerboard.areas[x][y].thunder == false {
+                            checkerboard.first = false;
+                            break;
+                        }
                     }
-                    send(&checkerboard.to_string());
                 }
+                
+                checkerboard.areas[x][y].click = Status::Known;
+                if checkerboard.areas[x][y].property == 0 {
+                    auto_expand(&mut checkerboard, x, y);
+                }
+                send(&checkerboard.to_string());
             }
             "~mark" => {
                 let (x, y) = extract_position(message);

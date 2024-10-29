@@ -27,14 +27,16 @@ impl Area {
 
 pub struct Checkerboard {
     pub areas: Vec<Vec<Area>>,
-    pub size: usize
+    pub size: usize,
+    pub first: bool
 }
 
 impl Checkerboard {
     pub fn new(size: usize) -> Self {
         let mut checkerboard = Checkerboard {
             areas: Vec::new(),
-            size
+            size,
+            first: true
         };
         for _x in 0..size {
             let mut vec = Vec::new();
