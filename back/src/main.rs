@@ -45,7 +45,12 @@ fn main() {
             }
             "~mark" => {
                 let (x, y) = extract_position(message);
-                checkerboard.areas[x][y].click = Status::Marked;
+                if checkerboard.areas[x][y].click == Status::Unclicked {
+                    checkerboard.areas[x][y].click = Status::Marked;
+                };
+                if checkerboard.areas[x][y].click == Status::Marked {
+                    checkerboard.areas[x][y].click = Status::Unclicked
+                }
             }
             "~abort" => {
                 send("~OK$");
