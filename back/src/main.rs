@@ -1,6 +1,4 @@
 use back::*;
-use std::process::exit;
-
 
 fn main() {
     prepare();
@@ -8,7 +6,6 @@ fn main() {
     let mut checkerboard = Checkerboard::new(0, 0, 0);
 
     loop {
-        println!("{}", checkerboard.known);
         message = recv();
         match message.as_str() {
             s if s.starts_with("~start") => {
@@ -50,7 +47,6 @@ fn main() {
                             send("~win$");
                             continue;
                         };
-
                     }
                     (x, y) if checkerboard.areas[x][y].click == Status::Known => {
                         if auto_click(&mut checkerboard, x, y) {
@@ -85,12 +81,6 @@ fn main() {
             }
             s if s.starts_with("~answer") => {
                 send(&checkerboard.to_answer());
-            }
-            s if s.starts_with("~abort") => {
-                send("~OK$");
-            }
-            s if s.starts_with("~stop$") => {
-                exit(0);
             }
             _ => {}
         }

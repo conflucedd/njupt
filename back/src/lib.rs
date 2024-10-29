@@ -105,7 +105,6 @@ impl Checkerboard {
 
     
     fn thunder_random(target: usize, length: usize, width: usize) -> Vec<(usize, usize)> {
-        println!("Starting random: length: {}, width: {}", length, width);
         let mut a: Vec<bool> = Vec::new();
         let mut b: Vec<usize> = Vec::new();
         let size = length * width;
@@ -123,7 +122,6 @@ impl Checkerboard {
         let mut res: Vec<(usize, usize)> = Vec::new();
 
         for i in b {
-            println!("{:?}", (i / width, i % width));
             res.push((i / width, i % width));
         }
         res
@@ -201,12 +199,9 @@ pub fn send(a: &str) -> () {
         }
     }
     fs::write("/tmp/recv", a).unwrap();
-    // for debug
-    println!("send complete");
 }
 
 pub fn recv() -> String {
-    println!("reciving");
     loop {
         if fs::exists("/tmp/send").unwrap() == false {
             thread::sleep(Duration::from_millis(100));
