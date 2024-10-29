@@ -99,6 +99,8 @@ def open_game_page(c):
     def disable_buttons():
         for i in range(row):
             for j in range(col):
+                buttons[(i, j)].unbind("<Button-1>")
+                buttons[(i, j)].unbind("<Button-3>")
                 buttons[(i, j)].config(state = "disabled")
 
     def left_click(event, x, y):
