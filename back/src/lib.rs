@@ -55,8 +55,9 @@ pub struct Checkerboard {
     pub length: usize,
     pub width: usize,
     pub first: bool,
+    pub known: usize,
     pub target: usize,
-    pub left_target: i32
+    pub left_target: i32,
 }
 
 impl Checkerboard {
@@ -67,6 +68,7 @@ impl Checkerboard {
             width,
             target,
             first: true,
+            known: 0,
             left_target: i32::try_from(target).unwrap()
         };
         for _x in 0..length {
@@ -256,7 +258,14 @@ pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
             if checkerboard.areas[x][y].property == 0 && checkerboard.areas[x][y].click == Status::Unclicked {
                 a.push_back((x, y));
             }
-            checkerboard.areas[x][y].click = Status::Known;
+            if checkerboard.areas[x][y].click == Status::Unclicked {
+                checkerboard.areas[x][y].click = Status::Known;
+                checkerboard.known += 1;
+
+                if checkerboard.areas[x][y].property == 0 {
+                    a.push_back((x, y));
+                }
+            }
         }
     }
 }
@@ -277,6 +286,7 @@ pub fn auto_click(checkerboard: &mut Checkerboard, x: usize, y: usize) -> bool {
                     return false; // means lost
                 }
                 checkerboard.areas[x][y].click = Status::Known;
+                checkerboard.known += 1;
                 if checkerboard.areas[x][y].property == 0 {
                     auto_expand(checkerboard, x, y);
                 }
@@ -287,14 +297,5 @@ pub fn auto_click(checkerboard: &mut Checkerboard, x: usize, y: usize) -> bool {
 }
 
 pub fn check_win(checkreboard: &Checkerboard) -> bool {
-    for x in 0..checkreboard.length {
-        for y in 0..checkreboard.width {
-            if checkreboard.areas[x][y].thunder == false {
-                if checkreboard.areas[x][y].click != Status::Known {
-                    return false;
-                }
-            }
-        }
-    }
-    true
+    checkreboard.known == checkreboard.length * checkreboard.width - checkreboard.target
 }

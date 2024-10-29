@@ -8,6 +8,7 @@ fn main() {
     let mut checkerboard = Checkerboard::new(0, 0, 0);
 
     loop {
+        println!("{}", checkerboard.known);
         message = recv();
         match message.as_str() {
             s if s.starts_with("~start") => {
@@ -40,6 +41,7 @@ fn main() {
                             continue;
                         }
                         checkerboard.areas[x][y].click = Status::Known;
+                        checkerboard.known += 1;
                         if checkerboard.areas[x][y].property == 0 {
                             auto_expand(&mut checkerboard, x, y);
                         }
