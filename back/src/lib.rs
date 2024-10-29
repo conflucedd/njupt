@@ -239,11 +239,10 @@ pub fn auto_expand2(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
 pub fn check_win(checkreboard: &Checkerboard) -> bool {
     for x in 0..checkreboard.size {
         for y in 0..checkreboard.size {
-            if checkreboard.areas[x][y].thunder == true && checkreboard.areas[x][y].click != Status::Marked {
-                return false;
-            }
-            if checkreboard.areas[x][y].thunder == false && checkreboard.areas[x][y].click == Status::Marked {
-                return false;
+            if checkreboard.areas[x][y].thunder == false {
+                if checkreboard.areas[x][y].click != Status::Known {
+                    return false;
+                }
             }
         }
     }
