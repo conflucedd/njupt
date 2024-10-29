@@ -89,9 +89,13 @@ impl Checkerboard {
         a.push('~');
         for i in 0..self.size {
             for j in 0..self.size {
+                if self.areas[i][j].click == Status::Marked {
+                    a.push_str("@");
+                }
                 if self.areas[i][j].click == Status::Unclicked {
                     a.push_str("9");
-                } else {
+                }
+                if self.areas[i][j].click == Status::Known {
                     a.push_str(&self.areas[i][j].property.to_string());
                 }
             }
