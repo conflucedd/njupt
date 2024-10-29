@@ -1,6 +1,8 @@
 use back::*;
 use std::process::exit;
+
 fn main() {
+    prepare();
     let mut message: String;
     let mut checkerboard = Checkerboard::new(0);
 

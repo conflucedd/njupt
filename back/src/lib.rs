@@ -3,8 +3,6 @@ use rand::prelude::random;
 use std::{thread, time::Duration};
 use std::collections::VecDeque;
 
-
-
 #[derive(PartialEq)]
 pub enum Status {
     Unclicked,
@@ -130,6 +128,15 @@ impl Checkerboard {
         }
         a.push('$');
         a
+    }
+}
+
+pub fn prepare() {
+    if fs::exists("/tmp/send").unwrap() {
+        fs::remove_file("/tmp/send").unwrap();
+    }
+    if fs::exists("/tmp/recv").unwrap() {
+        fs::remove_file("/tmp/recv").unwrap();
     }
 }
 
