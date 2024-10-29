@@ -24,6 +24,7 @@ def open_game_page(c):
     gp.grid_columnconfigure(0, weight = 1)
 
     # tell you win or lose
+    
     def sign_page(s):
         sp = Toplevel(gp)
         sp.title("")
@@ -46,18 +47,31 @@ def open_game_page(c):
 
         b = Button(sp, text = "continue", font= ("Arial", 20), width = 10, height = 1, command = return_to_start)
         b.pack(padx = 20, pady = 20, anchor = "center")
+    
 
-    # 0 is null, 1~8 is number, 9 is unclicked, @ is marked
+    row = 0
+    col = 0
+    if c == 1:
+        row = 9
+        col = 9
+    elif c == 2:
+        row = 16
+        col = 16
+    elif c == 3:
+        row = 30
+        col = 16
+
     button_states = {}
     buttons = {}
-    map = [[0 for x in range(c)] for y in range(c)] 
+    map = [[0 for x in range(col)] for y in range(row)]
+
     #start
-    lib.send("~start" + str(c) + "$")
+    lib.send("~start" + str(row) + "," + str(col) + "$")
     lib.recv()
 
     # draw the map
-    for i in range(c):
-        for j in range(c):
+    for i in range(row):
+        for j in range(col):
             button_states[(i, j)] = ' '
             btn = Button(frame, width = 1, height = 1, font= ("Arial", 20))
             btn.config(text = ' ')
@@ -68,9 +82,10 @@ def open_game_page(c):
 
             buttons[(i, j)] = btn
 
+    # update the map
     def update_button_state():
-        for i in range(c):
-            for j in range(c):
+        for i in range(row):
+            for j in range(col):
                 if button_states[(i, j)] == '9':
                     buttons[(i, j)].config(text = ' ')
                 elif button_states[(i, j)] == '0':
@@ -80,43 +95,66 @@ def open_game_page(c):
                 else:
                     buttons[(i, j)].config(text = button_states[(i, j)], bg = 'yellow')
 
-    def left_click(event, row, col):
+    # when the game is finished, disable all the buttons
+    def disable_buttons():
+        for i in range(row):
+            for j in range(col):
+                buttons[(i, j)].config(state = "disabled")
+
+    def left_click(event, x, y):
         button = event.widget
-        lib.send("~click" + str(row) + "," + str(col) + "$")
+        lib.send("~click" + str(x) + "," + str(y) + "$")
         s = lib.recv()
 
-        if s == "~win$":
         # you win
+        if s == "~win$":
+            disable_buttons()
             sign_page("you win!!!")
-        elif s == "~lost$":
+
         # you lose
+        elif s == "~lost$":
+            disable_buttons()
+            lib.send("~answer$")
+            s = lib.recv()
+
+            a = 1
+            for i in range(row):
+                for j in range(col):
+                    map[i][j] = s[a]
+                    a += 1
+            
+            for i in range(row):
+                for j in range(col):
+                    button_states[(i, j)] = map[i][j]
+            update_button_state()
             sign_page("you lose...")
+
         else:
-            x = 1
-            for i in range(c):
-                for j in range(c):
-                    map[i][j] = s[x]
-                    x += 1
+            a = 1
+            for i in range(row):
+                for j in range(col):
+                    map[i][j] = s[a]
+                    a += 1
            
         # update the current map
-        for i in range(c):
-            for j in range(c):
+        for i in range(row):
+            for j in range(col):
                 button_states[(i, j)] = map[i][j]
         update_button_state()
 
-    def right_click(event, row, col):
+    def right_click(event, x, y):
         button = event.widget
-        lib.send("~mark" + str(row) + "," + str(col) + "$")
+        lib.send("~mark" + str(x) + "," + str(y) + "$")
         s = lib.recv()
-        x = 1
-        for i in range(c):
-            for j in range(c):
-                map[i][j] = s[x]
-                x += 1
+        a = 1
+        for i in range(row):
+            for j in range(col):
+                map[i][j] = s[a]
+                a += 1
                 
         # update the current map
-        for i in range(c):
-            for j in range(c):
+        for i in range(row):
+            for j in range(col):
                 button_states[(i, j)] = map[i][j]
         update_button_state()
 
@@ -138,11 +176,11 @@ position_top = int(screen_height/2 - window_height/2)
 position_left = int(screen_width/2 - window_width/2)
 root.geometry(f"{window_width}x{window_height}+{position_left}+{position_top}")
 
-l = Label(root, width = 20, height= 1, text = "choose the level", font= ("Arial", 40))
+l = Label(root, width = 20, height= 1, text = "Mine Sweeper", font= ("Arial", 40))
 l.place(x = 500, y = 150, anchor = "center")
 
 choice = IntVar()
-choice.set(9)
+choice.set(1)
 r1 = Radiobutton(root, text = "easy", variable = choice, value = 1, font= ("Arial", 30))
 r2 = Radiobutton(root, text = "medium", variable = choice, value = 2, font= ("Arial", 30))
 r3 = Radiobutton(root, text = "hard", variable = choice, value = 3, font= ("Arial", 30))
