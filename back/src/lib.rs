@@ -44,7 +44,7 @@ impl Checkerboard {
         for _x in 0..size {
             let mut vec = Vec::new();
             for _y in 0..size {
-                let a = Area::new(Status::Unclicked, random::<bool>());
+                let a = Area::new(Status::Unclicked, Self::thunder_random(5));
                 vec.push(a);
             }
             checkerboard.areas.push(vec);
@@ -75,6 +75,13 @@ impl Checkerboard {
             }
         };
         checkerboard
+    }
+
+    fn thunder_random(a: usize) -> bool {
+        if random::<usize>() % 100 <= a {
+            return true;
+        };
+        false
     }
 
     pub fn to_string(&self) -> String {
