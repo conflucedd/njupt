@@ -24,6 +24,7 @@ fn main() {
                     send("~lose$");
                     checkerboard.areas[x][y].click = Status::Special;
                     // todo: send lose map
+                    // send(&checkerboard.to_string_at_fail());
                     continue;
                 }
                 if checkerboard.areas[x][y].thunder == true && checkerboard.first == true {
