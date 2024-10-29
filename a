@@ -14,7 +14,7 @@
 
 前端接收内容
 "~" + "OK" + "$"
-"~" + "提示数字(字符串)" + "$" # 0 is null, 1-8 is number, 9 is unclicked @ is marked
+"~" + "提示数字(字符串)" + "$" # 0 is null, 1-8 is number, 9 is unclicked @ is marked, s 是特殊的，表示炸掉的雷，只在fail时会出现
 "~" + "win" + "$"
 "~" + "lost" + "$"
 状态
