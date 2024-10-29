@@ -95,7 +95,7 @@ def game_page(c):
     map = [[0 for x in range(col)] for y in range(row)]
 
     #start
-    lib.send("~start" + str(row) + "," + str(col) + "," + str(c) + "$")
+    lib.send("~start" + str(row) + "," + str(col) + "," + "10" + "$")
     lib.recv()
 
     # draw the map

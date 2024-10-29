@@ -277,6 +277,9 @@ pub fn auto_click(checkerboard: &mut Checkerboard, x: usize, y: usize) -> bool {
                     return false; // means lost
                 }
                 checkerboard.areas[x][y].click = Status::Known;
+                if checkerboard.areas[x][y].property == 0 {
+                    auto_expand(checkerboard, x, y);
+                }
             }
         }
     }
