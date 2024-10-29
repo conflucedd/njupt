@@ -9,7 +9,7 @@ def open_game_page(c):
     # initialize the game page
     gp = Toplevel(root)
     gp.title("boom")
-    window_width = 1080
+    window_width = 1920
     window_height = 1080
     screen_width = gp.winfo_screenwidth()
     screen_height = gp.winfo_screenheight()

@@ -74,7 +74,7 @@ impl Checkerboard {
             checkerboard.areas.push(vec);
         };
 
-        let a = Self::thunder_random(20, length, width); // target is fix for debug
+        let a = Self::thunder_random(80, length, width); // target is fix for debug
         for (x, y) in a {
             checkerboard.areas[x][y].thunder = true;
         }
@@ -86,8 +86,8 @@ impl Checkerboard {
                 }
                 else  {
                     let mut a = 0;
-                    for (i, j) in around(x, y, checkerboard.length, checkerboard.width) {
-                        if checkerboard.areas[i][j].thunder == true
+                    for (x, y) in around(x, y, checkerboard.length, checkerboard.width) {
+                        if checkerboard.areas[x][y].thunder == true
                         { a += 1 }
                     }
                     checkerboard.areas[x][y].property = a;
@@ -115,12 +115,9 @@ impl Checkerboard {
         }
 
         let mut res: Vec<(usize, usize)> = Vec::new();
+
         for i in b {
-            if i % width == 0 {
-                res.push((i / width - 1, width - 1));
-            } else {
-                res.push((i / width, i % width - 1));
-            }
+            res.push((i / width, i % width));
         }
         res
     }
@@ -247,33 +244,12 @@ pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
     
     while a.is_empty() == false {
         let (x, y) = a.pop_front().unwrap();
-        if x >= 1 && checkerboard.areas[x - 1][y].click == Status::Unclicked {
-            checkerboard.areas[x - 1][y].click = Status::Known;
-            
-            if checkerboard.areas[x - 1][y].property == 0 {
-                a.push_back((x - 1, y));
+
+        for (x, y) in around(x, y, checkerboard.length, checkerboard.width) {
+            if checkerboard.areas[x][y].property == 0 && checkerboard.areas[x][y].click == Status::Unclicked {
+                a.push_back((x, y));
             }
-        }
-        if y >= 1 && checkerboard.areas[x][y - 1].click == Status::Unclicked {
-            checkerboard.areas[x][y - 1].click = Status::Known;
-            
-            if checkerboard.areas[x][y - 1].property == 0 {
-                a.push_back((x, y - 1));
-            }
-        }
-        if y + 1 < checkerboard.width && checkerboard.areas[x][y + 1].click == Status::Unclicked {
-            checkerboard.areas[x][y + 1].click = Status::Known;
-            
-            if checkerboard.areas[x][y + 1].property == 0 {
-                a.push_back((x, y + 1));
-            }
-        }
-        if x + 1 < checkerboard.length && checkerboard.areas[x + 1][y].click == Status::Unclicked {
-            checkerboard.areas[x + 1][y].click = Status::Known;
-            
-            if checkerboard.areas[x + 1][y].property == 0 {
-                a.push_back((x + 1, y));
-            }
+            checkerboard.areas[x][y].click = Status::Known;
         }
     }
 }
