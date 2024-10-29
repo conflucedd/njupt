@@ -124,6 +124,8 @@ def game_page(c):
                     buttons[(i, j)].config(text = ' ', bg = 'yellow')
                 elif button_states[(i, j)] == '@':
                     buttons[(i, j)].config(text = '@')
+                elif button_states[(i, j)] == 'b':
+                    buttons[(i, j)].config(text = 'b', bg = 'red')
                 else:
                     buttons[(i, j)].config(text = button_states[(i, j)], bg = 'yellow')
 
