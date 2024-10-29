@@ -8,13 +8,13 @@ fn main() {
         message = recv();
         println!("{}", &message); // for debug
         match message.as_str() {
-            "~start" => {
+            s if s.starts_with("~start") => {
                 let size = extract_size(message);
                 checkerboard = Checkerboard::new(size);
                 send("~OK$");
                 continue;
             }
-            "~click" => {
+            s if s.starts_with("~click") => {
                 let (x, y) = extract_position(message);
                 if checkerboard.areas[x][y].click != Status::Unclicked {
                     send(&checkerboard.to_string());
@@ -43,7 +43,7 @@ fn main() {
                 }
                 send(&checkerboard.to_string());
             }
-            "~mark" => {
+            s if s.starts_with("~mark") => {
                 let (x, y) = extract_position(message);
                 if checkerboard.areas[x][y].click == Status::Unclicked {
                     checkerboard.areas[x][y].click = Status::Marked;
@@ -52,11 +52,11 @@ fn main() {
                     checkerboard.areas[x][y].click = Status::Unclicked
                 }
             }
-            "~abort" => {
+            s if s.starts_with("~abort") => {
                 send("~OK$");
                 continue;
             }
-            "~stop$" => {
+            s if s.starts_with("~stop$") => {
                 exit(0);
             }
             &_ => {
