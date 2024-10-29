@@ -1,8 +1,14 @@
 from tkinter import *
 import lib
-import numpy
+
+is_changed = False
+
 # game page
-def open_game_page(c):
+def game_page(c):
+    # update is_changed to False
+    global is_changed
+    is_changed = False
+
     # hide the start page
     root.withdraw()
 
@@ -23,8 +29,28 @@ def open_game_page(c):
     gp.grid_rowconfigure(0, weight = 1)
     gp.grid_columnconfigure(0, weight = 1)
 
+    # the frame to put the control buttons
+    frame2 = Frame(gp)
+    frame2.place(x = 1920, y = 400, anchor = "e")
+
     # tell you win or lose
-    def sign_page(s):
+    r_state = Label(gp, width = 20, height= 1, text = " ", font= ("Arial", 50))
+    r_state.place(x = 960, y = 80, anchor = "center")
+
+    #go back to the start page
+    def return_to_start():
+        global is_changed
+        if is_changed == False:
+            gp.destroy()
+            root.deiconify()
+        else:
+            sign_page()
+
+    b = Button(frame2, text = "go back", font= ("Arial", 30), width = 10, height = 1, command = return_to_start)
+    b.pack(padx = 20, pady = 20, anchor = "n")
+
+    # tell you the game is not finished
+    def sign_page():
         sp = Toplevel(gp)
         sp.title("")
         window_width = 800
@@ -35,18 +61,22 @@ def open_game_page(c):
         position_left = int(screen_width/2 - window_width/2)
         sp.geometry(f"{window_width}x{window_height}+{position_left}+{position_top}")
 
-        l = Label(sp, text = s, width = 400, height = 1, font = ("Arial", 30))
-        l.pack(padx = 20, pady = 20, anchor = "center")
+        def continue_game():
+            sp.destroy()
 
-        #go back to the start page
-        def return_to_start():
+        def go_back():
             sp.destroy()
             gp.destroy()
             root.deiconify()
 
-        b = Button(sp, text = "continue", font= ("Arial", 20), width = 10, height = 1, command = return_to_start)
-        b.pack(padx = 20, pady = 20, anchor = "center")
-    
+        l = Label(sp, text = "Do you want to leave ?", width = 400, height = 1, font = ("Arial", 30))
+        l.pack(padx = 20, pady = 20, anchor = "n")
+
+        b1 = Button(sp, text = "yes", font= ("Arial", 30), width = 10, height = 1, command = go_back)
+        b1.place(x = 200, y = 150, anchor = "center")
+
+        b2 = Button(sp, text = "no", font= ("Arial", 30), width = 10, height = 1, command = continue_game)
+        b2.place(x = 600, y = 150, anchor = "center")
 
     row = 0
     col = 0
@@ -83,6 +113,9 @@ def open_game_page(c):
 
     # update the map
     def update_button_state():
+        global is_changed
+        is_changed = True
+
         for i in range(row):
             for j in range(col):
                 if button_states[(i, j)] == '9':
@@ -103,13 +136,13 @@ def open_game_page(c):
                 buttons[(i, j)].config(state = "disabled")
 
     def left_click(event, x, y):
-        button = event.widget
         lib.send("~click" + str(x) + "," + str(y) + "$")
         s = lib.recv()
 
         # you win
         if s == "~win$":
             disable_buttons()
+            r_state.config(text = "you win !!!")
             lib.send("~answer$")
             s = lib.recv()
 
@@ -123,11 +156,11 @@ def open_game_page(c):
                 for j in range(col):
                     button_states[(i, j)] = map[i][j]
             update_button_state()
-            sign_page("you win!!!")
 
         # you lose
         elif s == "~lost$":
             disable_buttons()
+            r_state.config(text = "you lose ...")
             lib.send("~answer$")
             s = lib.recv()
 
@@ -141,7 +174,6 @@ def open_game_page(c):
                 for j in range(col):
                     button_states[(i, j)] = map[i][j]
             update_button_state()
-            sign_page("you lose...")
 
         else:
             a = 1
@@ -157,7 +189,6 @@ def open_game_page(c):
         update_button_state()
 
     def right_click(event, x, y):
-        button = event.widget
         lib.send("~mark" + str(x) + "," + str(y) + "$")
         s = lib.recv()
         a = 1
@@ -202,7 +233,7 @@ r1.place(x = 400, y = 225)
 r2.place(x = 400, y = 325)
 r3.place(x = 400, y = 425)
 
-b = Button(root, text = "start", font= ("Arial", 30), width = 10, height = 1, command = lambda: open_game_page(choice.get()))
+b = Button(root, text = "start", font= ("Arial", 30), width = 10, height = 1, command = lambda: game_page(choice.get()))
 b.place(x = 375, y = 550)
 
 mainloop()
