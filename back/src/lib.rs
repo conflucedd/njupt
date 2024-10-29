@@ -74,7 +74,7 @@ impl Checkerboard {
             checkerboard.areas.push(vec);
         };
 
-        let a = Self::thunder_random(80, length, width); // target is fix for debug
+        let a = Self::thunder_random(length * width -1, length, width); // target is fix for debug
         for (x, y) in a {
             checkerboard.areas[x][y].thunder = true;
         }
@@ -117,6 +117,7 @@ impl Checkerboard {
         let mut res: Vec<(usize, usize)> = Vec::new();
 
         for i in b {
+            println!("{:?}", (i / width, i % width));
             res.push((i / width, i % width));
         }
         res

@@ -24,7 +24,6 @@ def open_game_page(c):
     gp.grid_columnconfigure(0, weight = 1)
 
     # tell you win or lose
-    
     def sign_page(s):
         sp = Toplevel(gp)
         sp.title("")
