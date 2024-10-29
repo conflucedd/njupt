@@ -16,7 +16,10 @@ fn main() {
             }
             "~click" => {
                 let (x, y) = extract_position(message);
-                
+                if checkerboard.areas[x][y].click != Status::Unclicked {
+                    send(&checkerboard.to_string());
+                    continue;
+                }
                 if checkerboard.areas[x][y].thunder == true && checkerboard.first == false {
                     send("~lose$");
                 }
