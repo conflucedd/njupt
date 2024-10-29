@@ -152,38 +152,34 @@ pub fn extract_position(a: String) -> (usize, usize) {
 }
 
 pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
-    if checkerboard.areas[x - 1][y - 1].property == 0 && x >= 1 && y >= 1 {
-        checkerboard.areas[x - 1][y - 1].click = Status::Known;
-        
-    }
-    if checkerboard.areas[x - 1][y].property == 0 && x >= 1 {
+    if checkerboard.areas[x - 1][y].thunder == false && x >= 1 {
         checkerboard.areas[x - 1][y].click = Status::Known;
-        auto_expand(checkerboard, x - 1, y - 1)
+        
+        if checkerboard.areas[x - 1][y].property == 0 {
+            auto_expand(checkerboard, x - 1, y)
+        }
     }
-    if checkerboard.areas[x - 1][y + 1].property == 0 && x  >= 1 && y + 1 < checkerboard.size {
-        checkerboard.areas[x - 1][y + 1].click = Status::Known;
-        auto_expand(checkerboard, x - 1, y + 1)
-    }
-    if checkerboard.areas[x][y - 1].property == 0 && y >= 1 {
+    if checkerboard.areas[x][y - 1].thunder == false && y >= 1 {
         checkerboard.areas[x][y - 1].click = Status::Known;
-        auto_expand(checkerboard, x, y - 1)
+        
+        if checkerboard.areas[x][y - 1].property == 0 {
+            auto_expand(checkerboard, x, y - 1)
+        }
     }
-    if checkerboard.areas[x][y + 1].property == 0 && y + 1 < checkerboard.size {
+    if checkerboard.areas[x][y + 1].thunder == false && y + 1 < checkerboard.size {
         checkerboard.areas[x][y + 1].click = Status::Known;
-        auto_expand(checkerboard, x, y + 1) 
+        
+        if checkerboard.areas[x][y + 1].property == 0 {
+            auto_expand(checkerboard, x, y + 1)
+        }
     }
-    if checkerboard.areas[x + 1][y - 1].property == 0 && x + 1 < checkerboard.size && y >= 1 && y - 1 < checkerboard.size {
-        checkerboard.areas[x + 1][y - 1].click = Status::Known;
-        auto_expand(checkerboard, x + 1, y - 1)
-    }
-    if checkerboard.areas[x + 1][y].property == 0 && x +1 < checkerboard.size {
+    if checkerboard.areas[x + 1][y].thunder == false && x +1 < checkerboard.size {
         checkerboard.areas[x + 1][y].click = Status::Known;
-        auto_expand(checkerboard, x + 1, y)
+        
+        if checkerboard.areas[x + 1][y].property == 0 {
+            auto_expand(checkerboard, x + 1, y)
+        }
     }
-    if checkerboard.areas[x + 1][y + 1].property == 0 && x + 1 < checkerboard.size && y + 1 < checkerboard.size {
-        checkerboard.areas[x + 1][y + 1].click = Status::Known;
-        auto_expand(checkerboard, x + 1, y + 1)
-    };
 }
 
 pub fn check_win(checkreboard: &Checkerboard) -> bool {
