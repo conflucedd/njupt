@@ -9,6 +9,7 @@ fn main() {
     message = recv();
     if message.starts_with("~start") {
         let (length, width) = extract_length_and_width(message);
+        println!("{}, {}", length, width);
         checkerboard = Checkerboard::new(length, width);
         send("~OK$");
     } else {
@@ -21,6 +22,7 @@ fn main() {
         match message.as_str() {
             s if s.starts_with("~start") => {
                 let (length, width) = extract_length_and_width(message);
+                
                 checkerboard = Checkerboard::new(length, width);
                 send("~OK$");
             }

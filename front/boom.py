@@ -58,8 +58,8 @@ def open_game_page(c):
         row = 16
         col = 16
     elif c == 3:
-        row = 30
-        col = 16
+        row = 16
+        col = 30
 
     button_states = {}
     buttons = {}

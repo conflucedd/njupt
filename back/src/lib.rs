@@ -74,7 +74,14 @@ impl Checkerboard {
             checkerboard.areas.push(vec);
         };
 
-        let a = Self::thunder_random(2, length, width); // target is fix for debug
+        for x in 0..length {
+            for y in 0..width {
+                let a = checkerboard.areas[x][y].thunder;
+            }
+        }
+        println!("OK!");
+
+        let a = Self::thunder_random(20, length, width); // target is fix for debug
         for (x, y) in a {
             checkerboard.areas[x][y].thunder = true;
         }
@@ -86,8 +93,8 @@ impl Checkerboard {
                 }
                 else  {
                     let mut a = 0;
-                    for (x, y) in around(x, y, checkerboard.length, checkerboard.width) {
-                        if checkerboard.areas[x][y].thunder == true
+                    for (i, j) in around(x, y, checkerboard.length, checkerboard.width) {
+                        if checkerboard.areas[i][j].thunder == true
                         { a += 1 }
                     }
                     checkerboard.areas[x][y].property = a;
@@ -99,6 +106,7 @@ impl Checkerboard {
 
     
     fn thunder_random(target: usize, length: usize, width: usize) -> Vec<(usize, usize)> {
+        println!("Starting random: length: {}, width: {}", length, width);
         let mut a: Vec<bool> = Vec::new();
         let mut b: Vec<usize> = Vec::new();
         let size = length * width;
@@ -115,10 +123,10 @@ impl Checkerboard {
 
         let mut res: Vec<(usize, usize)> = Vec::new();
         for i in b {
-            if i % length == 0 {
-                res.push((i / length - 1, length - 1));
+            if i % width == 0 {
+                res.push((i / width - 1, width - 1));
             } else {
-                res.push((i / length, i % length - 1));
+                res.push((i / width, i % width - 1));
             }
         }
         res
