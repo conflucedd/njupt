@@ -46,8 +46,8 @@ def game_page(c):
         else:
             sign_page()
 
-    b = Button(frame2, text = "go back", font= ("Arial", 30), width = 10, height = 1, command = return_to_start)
-    b.pack(padx = 20, pady = 20, anchor = "n")
+    b = Button(gp, text = "go back", font= ("Arial", 30), width = 10, height = 1, command = return_to_start)
+    b.place(x = 1750, y = 80, anchor = "center")
 
     # tell you the game is not finished
     def sign_page():
@@ -95,7 +95,7 @@ def game_page(c):
     map = [[0 for x in range(col)] for y in range(row)]
 
     #start
-    lib.send("~start" + str(row) + "," + str(col) + "$")
+    lib.send("~start" + str(row) + "," + str(col) + "," + str(c) + "$")
     lib.recv()
 
     # draw the map

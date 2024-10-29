@@ -74,7 +74,7 @@ impl Checkerboard {
             checkerboard.areas.push(vec);
         };
 
-        let a = Self::thunder_random(length * width -1, length, width); // target is fix for debug
+        let a = Self::thunder_random(length * width - 1, length, width); // target is fix for debug
         for (x, y) in a {
             checkerboard.areas[x][y].thunder = true;
         }
@@ -217,28 +217,51 @@ pub fn extract_length_and_width(a: String) -> (usize, usize) {
 }
 
 pub fn extract_position(a: String) -> (usize, usize) {
-    let str_itr = a.chars();
+    let mut str_itr = a.chars();
     let mut x: String = String::new();
     let mut y: String = String::new();
-    
-    let mut for_y = false;
 
-    for c in str_itr {
-        if c.is_numeric() == true && for_y == false {
-            x.push(c)
-        }
+    while let Some(c) = str_itr.next() {
         if c == ',' {
-            for_y = true;
-            continue;
+            break;
         }
-        if c.is_numeric() == true && for_y == true {
-            y.push(c)
+        if c.is_numeric() {
+            x.push(c);
         }
     }
-
+    while let Some(c) = str_itr.next() {
+        if c == ',' {
+            break;
+        }
+        if c.is_numeric() {
+            y.push(c);
+        }
+    }
+    println!("{}, {}", x, y);
     (x.parse().unwrap(), y.parse().unwrap())
 }
 
+fn find_min<'a, I>(vals: I) -> Option<&'a u32>
+where
+    I: Iterator<Item = &'a u32>,
+{
+    vals.min()
+}
+
+pub fn extract_number(a: String) -> (usize, usize) {
+    let mut str_itr = a.chars();
+    let mut x: String = String::new();
+
+    while let Some(c) = str_itr.next() {
+        if c == ',' {
+            break;
+        }
+        if c.is_numeric() {
+            x.push(c);
+        }
+    }
+    x.parse().unwrap()
+}
 
 pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
     let mut a: VecDeque<(usize, usize)> = VecDeque::new();
