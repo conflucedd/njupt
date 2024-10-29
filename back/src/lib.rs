@@ -1,6 +1,9 @@
 use std::fs;
 use rand::prelude::random;
 use std::{thread, time::Duration};
+use std::collections::VecDeque;
+
+
 
 #[derive(PartialEq)]
 pub enum Status {
@@ -181,6 +184,47 @@ pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
         if checkerboard.areas[x + 1][y].property == 0 {
             auto_expand(checkerboard, x + 1, y)
         }
+    }
+}
+
+pub fn expand(checkerboard: &mut Checkerboard, a: &mut VecDeque<(usize, usize)>, x: usize, y: usize) -> () {
+    if checkerboard.areas[x - 1][y].thunder == false && x >= 1 {
+        checkerboard.areas[x - 1][y].click = Status::Known;
+        
+        if checkerboard.areas[x - 1][y].property == 0 {
+            a.push_back((x - 1, y));
+        }
+    }
+    if checkerboard.areas[x][y - 1].thunder == false && y >= 1 {
+        checkerboard.areas[x][y - 1].click = Status::Known;
+        
+        if checkerboard.areas[x][y - 1].property == 0 {
+            a.push_back((x, y - 1));
+        }
+    }
+    if checkerboard.areas[x][y + 1].thunder == false && y + 1 < checkerboard.size {
+        checkerboard.areas[x][y + 1].click = Status::Known;
+        
+        if checkerboard.areas[x][y + 1].property == 0 {
+            a.push_back((x, y + 1));
+        }
+    }
+    if checkerboard.areas[x + 1][y].thunder == false && x +1 < checkerboard.size {
+        checkerboard.areas[x + 1][y].click = Status::Known;
+        
+        if checkerboard.areas[x + 1][y].property == 0 {
+            a.push_back((x + 1, y));
+        }
+    }
+}
+
+pub fn auto_expand2(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
+    let mut a: VecDeque<(usize, usize)> = VecDeque::new();
+    a.push_back((x, y));
+    while a.is_empty() == false {
+        let (x, y) = a.pop_back().unwrap();
+        expand(checkerboard, &mut a, x, y);
+        a.pop_front().unwrap();
     }
 }
 
