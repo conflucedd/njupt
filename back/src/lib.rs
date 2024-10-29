@@ -89,8 +89,11 @@ impl Checkerboard {
         a.push('~');
         for i in 0..self.size {
             for j in 0..self.size {
-                a.push_str(&self.areas[i][j].property.to_string());
-                a.push(',');
+                if self.areas[i][j].click == Status::Unclicked {
+                    a.push_str("9");
+                } else {
+                    a.push_str(&self.areas[i][j].property.to_string());
+                }
             }
         }
         a.push('$');
