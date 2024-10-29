@@ -261,6 +261,10 @@ pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
     }
 }
 
+pub fn auto_click(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
+    // todo!
+}
+
 pub fn check_win(checkreboard: &Checkerboard) -> bool {
     for x in 0..checkreboard.length {
         for y in 0..checkreboard.width {

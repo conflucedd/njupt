@@ -23,7 +23,6 @@ fn main() {
                 let (length, width) = extract_length_and_width(message);
                 checkerboard = Checkerboard::new(length, width);
                 send("~OK$");
-                continue;
             }
             s if s.starts_with("~click") => {
                 let (x, y) = extract_position(message);
@@ -72,6 +71,11 @@ fn main() {
                     send(&checkerboard.to_string());
                     continue;
                 }
+                send(&checkerboard.to_string()); // random click
+            }
+            s if s.starts_with("~complete") => {
+                let (x, y) = extract_position(message);
+                auto_click(&mut checkerboard, x, y);
                 send(&checkerboard.to_string());
             }
             s if s.starts_with("~abort") => {
