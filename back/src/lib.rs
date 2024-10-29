@@ -193,7 +193,7 @@ pub fn send(a: &str) -> () {
     println!("sending: {}", a);
     loop {
         if fs::exists("/tmp/recv").unwrap() == true {
-            thread::sleep(Duration::from_millis(200));
+            thread::sleep(Duration::from_millis(100));
         } else {
             break;
         }
@@ -207,7 +207,7 @@ pub fn recv() -> String {
     println!("reciving");
     loop {
         if fs::exists("/tmp/send").unwrap() == false {
-            thread::sleep(Duration::from_millis(200));
+            thread::sleep(Duration::from_millis(100));
         } else {
             break;
         }
