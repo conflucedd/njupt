@@ -166,9 +166,6 @@ pub fn extract_size(a: String) -> usize {
     let str_itr = a.chars();
     let mut num: String = String::new();
     for c in str_itr {
-        if c == '~' || c == ',' {
-            continue
-        }
         if c.is_numeric() == true {
             num.push(c)
         }
@@ -200,37 +197,6 @@ pub fn extract_position(a: String) -> (usize, usize) {
     }
 
     (x.parse().unwrap(), y.parse().unwrap())
-}
-
-pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
-    if x >= 1 && checkerboard.areas[x - 1][y].thunder == false {
-        checkerboard.areas[x - 1][y].click = Status::Known;
-        
-        if checkerboard.areas[x - 1][y].property == 0 {
-            auto_expand(checkerboard, x - 1, y)
-        }
-    }
-    if y >= 1 && checkerboard.areas[x][y - 1].thunder == false {
-        checkerboard.areas[x][y - 1].click = Status::Known;
-        
-        if checkerboard.areas[x][y - 1].property == 0 {
-            auto_expand(checkerboard, x, y - 1)
-        }
-    }
-    if y + 1 < checkerboard.size && checkerboard.areas[x][y + 1].thunder == false {
-        checkerboard.areas[x][y + 1].click = Status::Known;
-        
-        if checkerboard.areas[x][y + 1].property == 0 {
-            auto_expand(checkerboard, x, y + 1)
-        }
-    }
-    if x + 1 < checkerboard.size && checkerboard.areas[x + 1][y].thunder == false {
-        checkerboard.areas[x + 1][y].click = Status::Known;
-        
-        if checkerboard.areas[x + 1][y].property == 0 {
-            auto_expand(checkerboard, x + 1, y)
-        }
-    }
 }
 
 pub fn expand(checkerboard: &mut Checkerboard, a: &mut VecDeque<(usize, usize)>) -> () {
@@ -265,7 +231,7 @@ pub fn expand(checkerboard: &mut Checkerboard, a: &mut VecDeque<(usize, usize)>)
     }
 }
 
-pub fn auto_expand2(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
+pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
     let mut a: VecDeque<(usize, usize)> = VecDeque::new();
     a.push_back((x, y));
     

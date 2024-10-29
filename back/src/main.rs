@@ -40,7 +40,7 @@ fn main() {
                 checkerboard.areas[x][y].click = Status::Known;
                 checkerboard.first = false;
                 if checkerboard.areas[x][y].property == 0 {
-                    auto_expand2(&mut checkerboard, x, y);
+                    auto_expand(&mut checkerboard, x, y);
                 }
                 if check_win(&checkerboard)
                 {
