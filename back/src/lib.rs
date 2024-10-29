@@ -18,10 +18,10 @@ pub struct Area {
 }
 
 impl Area {
-    fn new(click: Status, thunder: bool) -> Self {
+    fn new() -> Self {
         Area {
-            click,
-            thunder,
+            click: Status::Unclicked,
+            thunder: false,
             property: 0
         }
     }
@@ -29,27 +29,35 @@ impl Area {
 
 pub struct Checkerboard {
     pub areas: Vec<Vec<Area>>,
-    pub size: usize,
+    pub length: usize,
+    pub width: usize,
     pub first: bool
 }
 
 impl Checkerboard {
-    pub fn new(size: usize) -> Self {
+    pub fn new(length: usize, width: usize) -> Self {
         let mut checkerboard = Checkerboard {
             areas: Vec::new(),
-            size,
+            length,
+            width,
             first: true
         };
-        for _x in 0..size {
+        for _x in 0..length {
             let mut vec = Vec::new();
-            for _y in 0..size {
-                let a = Area::new(Status::Unclicked, Self::thunder_random(1));
+            for _y in 0..width {
+                let a = Area::new();
                 vec.push(a);
             }
             checkerboard.areas.push(vec);
         };
-        for x in 0..size {
-            for y in 0..size {
+
+        let a = Self::thunder_random(2, length, width); // target is fix for debug
+        for (x, y) in a {
+            checkerboard.areas[x][y].thunder = true;
+        }
+
+        for x in 0..length {
+            for y in 0..width {
                 if checkerboard.areas[x][y].thunder == true {
                     checkerboard.areas[x][y].property = -1;
                 }
@@ -58,17 +66,17 @@ impl Checkerboard {
                         { checkerboard.areas[x][y].property += 1 }
                     if x >= 1 && checkerboard.areas[x - 1][y].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if x >= 1  && y + 1 < size && checkerboard.areas[x - 1][y + 1].thunder == true
+                    if x >= 1  && y + 1 < width && checkerboard.areas[x - 1][y + 1].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
                     if y >= 1 && checkerboard.areas[x][y - 1].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if y + 1 < size && checkerboard.areas[x][y + 1].thunder == true
+                    if y + 1 < width && checkerboard.areas[x][y + 1].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if x + 1 < size && y >= 1 && checkerboard.areas[x + 1][y - 1].thunder == true
+                    if x + 1 < length && y >= 1 && checkerboard.areas[x + 1][y - 1].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if x + 1 < size && checkerboard.areas[x + 1][y].thunder == true
+                    if x + 1 < length && checkerboard.areas[x + 1][y].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
-                    if x + 1 < size && y + 1 < size && checkerboard.areas[x + 1][y + 1].thunder == true
+                    if x + 1 < length && y + 1 < width && checkerboard.areas[x + 1][y + 1].thunder == true
                         { checkerboard.areas[x][y].property += 1 }
                 }
             }
@@ -76,26 +84,42 @@ impl Checkerboard {
         checkerboard
     }
 
-    fn thunder_random(a: usize) -> bool {
-        if random::<usize>() % 100 <= a {
-            return true;
-        };
-        false
+    
+    fn thunder_random(target: usize, length: usize, width: usize) -> Vec<(usize, usize)> {
+        let mut a: Vec<bool> = Vec::new();
+        let mut b: Vec<usize> = Vec::new();
+        let size = length * width;
+        for _i in 0..size {
+            a.push(true);
+        }
+        while Vec::len(&b) != target {
+            let c = random::<usize>() % size;
+            if a[c] == true {
+                b.push(c);
+                a[c] = false;
+            }
+        }
+
+        let mut res: Vec<(usize, usize)> = Vec::new();
+        for i in b {
+            res.push((i / length, i % length - 1));
+        }
+        res
     }
 
     pub fn to_string(&self) -> String {
         let mut a = String::new();
         a.push('~');
-        for i in 0..self.size {
-            for j in 0..self.size {
-                if self.areas[i][j].click == Status::Marked {
+        for x in 0..self.length {
+            for y in 0..self.width {
+                if self.areas[x][y].click == Status::Marked {
                     a.push_str("@");
                 }
-                if self.areas[i][j].click == Status::Unclicked {
+                if self.areas[x][y].click == Status::Unclicked {
                     a.push_str("9");
                 }
-                if self.areas[i][j].click == Status::Known {
-                    a.push_str(&self.areas[i][j].property.to_string());
+                if self.areas[x][y].click == Status::Known {
+                    a.push_str(&self.areas[x][y].property.to_string());
                 }
             }
         }
@@ -106,23 +130,23 @@ impl Checkerboard {
     pub fn to_string_at_fail(&self) -> String {
         let mut a = String::new();
         a.push('~');
-        for i in 0..self.size {
-            for j in 0..self.size {
-                if self.areas[i][j].click == Status::Special {
+        for x in 0..self.length {
+            for y in 0..self.width {
+                if self.areas[x][y].click == Status::Special {
                     a.push_str("s");
                     continue;
                 }
-                if self.areas[i][j].thunder == true {
+                if self.areas[x][y].thunder == true {
                     a.push_str("t");
                 }
-                if self.areas[i][j].click == Status::Marked {
+                if self.areas[x][y].click == Status::Marked {
                     a.push_str("@");
                 }
-                if self.areas[i][j].click == Status::Unclicked {
+                if self.areas[x][y].click == Status::Unclicked {
                     a.push_str("9");
                 }
-                if self.areas[i][j].click == Status::Known {
-                    a.push_str(&self.areas[i][j].property.to_string());
+                if self.areas[x][y].click == Status::Known {
+                    a.push_str(&self.areas[x][y].property.to_string());
                 }
             }
         }
@@ -169,15 +193,8 @@ pub fn recv() -> String {
     message
 }
 
-pub fn extract_size(a: String) -> usize {
-    let str_itr = a.chars();
-    let mut num: String = String::new();
-    for c in str_itr {
-        if c.is_numeric() == true {
-            num.push(c)
-        }
-    }
-    num.parse().unwrap()
+pub fn extract_length_and_width(a: String) -> (usize, usize) {
+    extract_position(a)
 }
 
 pub fn extract_position(a: String) -> (usize, usize) {
@@ -188,9 +205,6 @@ pub fn extract_position(a: String) -> (usize, usize) {
     let mut for_y = false;
 
     for c in str_itr {
-        if c == '~' {
-            continue;
-        }
         if c.is_numeric() == true && for_y == false {
             x.push(c)
         }
@@ -222,14 +236,14 @@ pub fn expand(checkerboard: &mut Checkerboard, a: &mut VecDeque<(usize, usize)>)
             a.push_back((x, y - 1));
         }
     }
-    if y + 1 < checkerboard.size && checkerboard.areas[x][y + 1].click == Status::Unclicked {
+    if y + 1 < checkerboard.width && checkerboard.areas[x][y + 1].click == Status::Unclicked {
         checkerboard.areas[x][y + 1].click = Status::Known;
         
         if checkerboard.areas[x][y + 1].property == 0 {
             a.push_back((x, y + 1));
         }
     }
-    if x + 1 < checkerboard.size && checkerboard.areas[x + 1][y].click == Status::Unclicked {
+    if x + 1 < checkerboard.length && checkerboard.areas[x + 1][y].click == Status::Unclicked {
         checkerboard.areas[x + 1][y].click = Status::Known;
         
         if checkerboard.areas[x + 1][y].property == 0 {
@@ -248,8 +262,8 @@ pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
 }
 
 pub fn check_win(checkreboard: &Checkerboard) -> bool {
-    for x in 0..checkreboard.size {
-        for y in 0..checkreboard.size {
+    for x in 0..checkreboard.length {
+        for y in 0..checkreboard.width {
             if checkreboard.areas[x][y].thunder == false {
                 if checkreboard.areas[x][y].click != Status::Known {
                     return false;

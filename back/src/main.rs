@@ -4,15 +4,24 @@ use std::process::exit;
 fn main() {
     prepare();
     let mut message: String;
-    let mut checkerboard = Checkerboard::new(0);
+    let mut checkerboard;
+
+    message = recv();
+    if message.starts_with("~start") {
+        let (length, width) = extract_length_and_width(message);
+        checkerboard = Checkerboard::new(length, width);
+        send("~OK$");
+    } else {
+        exit(1);
+    }
 
     loop  {
         message = recv();
         println!("message: {}", &message); // for debug
         match message.as_str() {
             s if s.starts_with("~start") => {
-                let size = extract_size(message);
-                checkerboard = Checkerboard::new(size);
+                let (length, width) = extract_length_and_width(message);
+                checkerboard = Checkerboard::new(length, width);
                 send("~OK$");
                 continue;
             }
@@ -31,7 +40,7 @@ fn main() {
                 }
                 if checkerboard.areas[x][y].thunder == true && checkerboard.first == true {
                     loop {
-                        checkerboard = Checkerboard::new(checkerboard.size);
+                        checkerboard = Checkerboard::new(checkerboard.length, checkerboard.width);
                         if checkerboard.areas[x][y].thunder == false {
                             checkerboard.first = false;
                             break;
@@ -73,7 +82,7 @@ fn main() {
                 exit(0);
             }
             &_ => {
-                exit(1);
+                exit(2);
             }
         }
     }
