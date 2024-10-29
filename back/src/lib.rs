@@ -141,7 +141,9 @@ pub fn send(a: &str) -> () {
             break;
         }
     }
-    fs::write("/tmp/recv", &a).unwrap();
+    fs::write("/tmp/recv", a).unwrap();
+    // for debug
+    println!("{}", a);
 }
 
 pub fn recv() -> String {
@@ -155,6 +157,8 @@ pub fn recv() -> String {
 
     let message = fs::read_to_string("/tmp/send").unwrap();
     fs::remove_file("/tmp/send").unwrap();
+    // for debug
+    println!("{}", &message);
     message
 }
 
