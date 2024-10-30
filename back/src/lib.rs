@@ -85,22 +85,12 @@ impl Checkerboard {
                     checkerboard.areas[x][y].property = -1;
                 }
                 else  {
-                    if x >= 1 && y >= 1 && checkerboard.areas[x - 1][y - 1].thunder == true
-                        { checkerboard.areas[x][y].property += 1 }
-                    if x >= 1 && checkerboard.areas[x - 1][y].thunder == true
-                        { checkerboard.areas[x][y].property += 1 }
-                    if x >= 1  && y + 1 < width && checkerboard.areas[x - 1][y + 1].thunder == true
-                        { checkerboard.areas[x][y].property += 1 }
-                    if y >= 1 && checkerboard.areas[x][y - 1].thunder == true
-                        { checkerboard.areas[x][y].property += 1 }
-                    if y + 1 < width && checkerboard.areas[x][y + 1].thunder == true
-                        { checkerboard.areas[x][y].property += 1 }
-                    if x + 1 < length && y >= 1 && checkerboard.areas[x + 1][y - 1].thunder == true
-                        { checkerboard.areas[x][y].property += 1 }
-                    if x + 1 < length && checkerboard.areas[x + 1][y].thunder == true
-                        { checkerboard.areas[x][y].property += 1 }
-                    if x + 1 < length && y + 1 < width && checkerboard.areas[x + 1][y + 1].thunder == true
-                        { checkerboard.areas[x][y].property += 1 }
+                    let mut a = 0;
+                    for (x, y) in around(x, y, checkerboard.length, checkerboard.width) {
+                        if checkerboard.areas[x][y].thunder == true
+                        { a += 1 }
+                    }
+                    checkerboard.areas[x][y].property = a;
                 }
             }
         };
