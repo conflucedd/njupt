@@ -55,14 +55,18 @@ fn main() {
                             send("~win$");
                             continue;
                         };
+
                     }
                     (x, y) if checkerboard.areas[x][y].click == Status::Known => {
-                        auto_click(&mut checkerboard, x, y);
-                        if check_win(&checkerboard)
-                        {
-                            send("~win$");
+                        if auto_click(&mut checkerboard, x, y) {
+                            if check_win(&checkerboard) {
+                                send("~win$");
+                                continue;
+                            };
+                        } else {
+                            send("~lost$");
                             continue;
-                        };
+                        }
                     }
                     _ => {}
                 }
@@ -82,9 +86,11 @@ fn main() {
                 }
                 send(&checkerboard.to_string());
             }
+            s if s.starts_with("~answer") => {
+                send(&checkerboard.to_answer());
+            }
             s if s.starts_with("~abort") => {
                 send("~OK$");
-                continue;
             }
             s if s.starts_with("~stop$") => {
                 exit(0);

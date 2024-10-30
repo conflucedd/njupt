@@ -4,7 +4,7 @@
 "~mark"
 "~abort"
 "~stop"
-"~complete"
+"answer"
 
 前端发送内容
 "start": "strsize" + "$" # end sign
@@ -12,7 +12,7 @@
 "mark" + "strnumber" + , "strnumber" + "$"
 "abort": "$"
 "~stop" + "$" // 后端退出
-"~complete" 自动补全
+"answer" // 获取答案
 
 
 前端接收内容
