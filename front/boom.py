@@ -117,17 +117,20 @@ def game_page(c):
     def update_button_state():
         global is_changed
         is_changed = True
-
         for i in range(row):
             for j in range(col):
-                if button_states[(i, j)] == '9':
-                    buttons[(i, j)].config(text = ' ')
+                if button_states[(i, j)] == 'r':
+                    buttons[(i, j)].config(text = '#', bg = 'green')
+                elif button_states[(i, j)] == 't':
+                    buttons[(i, j)].config(text = 'T', bg = 'red')    
                 elif button_states[(i, j)] == '0':
                     buttons[(i, j)].config(text = ' ', bg = 'yellow')
                 elif button_states[(i, j)] == '@':
-                    buttons[(i, j)].config(text = '@')
+                    buttons[(i, j)].config(text = '#')
                 elif button_states[(i, j)] == 'b':
-                    buttons[(i, j)].config(text = 'b', bg = 'red')
+                    buttons[(i, j)].config(text = '!', bg = 'red')
+                elif button_states[(i, j)] == '9':
+                    buttons[(i, j)].config(text = ' ')
                 else:
                     buttons[(i, j)].config(text = button_states[(i, j)], bg = 'yellow')
 
