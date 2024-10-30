@@ -54,15 +54,17 @@ pub struct Checkerboard {
     pub areas: Vec<Vec<Area>>,
     pub length: usize,
     pub width: usize,
-    pub first: bool
+    pub first: bool,
+    pub target: usize
 }
 
 impl Checkerboard {
-    pub fn new(length: usize, width: usize) -> Self {
+    pub fn new(length: usize, width: usize, target: usize) -> Self {
         let mut checkerboard = Checkerboard {
             areas: Vec::new(),
             length,
             width,
+            target,
             first: true
         };
         for _x in 0..length {
@@ -74,7 +76,7 @@ impl Checkerboard {
             checkerboard.areas.push(vec);
         };
 
-        let a = Self::thunder_random(length * width - 1, length, width); // target is fix for debug
+        let a = Self::thunder_random(target, length, width); // target is fix for debug
         for (x, y) in a {
             checkerboard.areas[x][y].thunder = true;
         }
@@ -212,10 +214,6 @@ pub fn recv() -> String {
     message
 }
 
-pub fn extract_length_and_width(a: String) -> (usize, usize) {
-    extract_position(a)
-}
-
 fn extract_number<I>(a: &mut I) -> usize
 where
     I: Iterator<Item = char>,
@@ -235,6 +233,11 @@ where
 pub fn extract_position(a: String) -> (usize, usize) {
     let mut str_itr = a.chars();
     (extract_number(&mut str_itr), extract_number(&mut str_itr))
+}
+
+pub fn extract_start(a: String) -> (usize, usize, usize) {
+    let mut str_itr = a.chars();
+    (extract_number(&mut str_itr), extract_number(&mut str_itr), extract_number(&mut str_itr))
 }
 
 pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {

@@ -1,26 +1,18 @@
 use back::*;
 use std::process::exit;
 
+
 fn main() {
     prepare();
     let mut message: String;
-    let mut checkerboard;
-
-    message = recv();
-    if message.starts_with("~start") {
-        let (length, width) = extract_length_and_width(message);
-        checkerboard = Checkerboard::new(length, width);
-        send("~OK$");
-    } else {
-        exit(1);
-    }
+    let mut checkerboard = Checkerboard::new(0, 0, 0);
 
     loop {
         message = recv();
         match message.as_str() {
             s if s.starts_with("~start") => {
-                let (length, width) = extract_length_and_width(message);
-                checkerboard = Checkerboard::new(length, width);
+                let (length, width, target) = extract_start(message);
+                checkerboard = Checkerboard::new(length, width, target);
                 send("~OK$");
             }
             s if s.starts_with("~click") => {
@@ -33,7 +25,7 @@ fn main() {
                         // first click protect
                         if checkerboard.areas[x][y].thunder == true && checkerboard.first == true {
                             loop {
-                                checkerboard = Checkerboard::new(checkerboard.length, checkerboard.width);
+                                checkerboard = Checkerboard::new(checkerboard.length, checkerboard.width, checkerboard.target);
                                 if checkerboard.areas[x][y].thunder == false {
                                     break;
                                 }
