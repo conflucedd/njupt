@@ -115,7 +115,11 @@ impl Checkerboard {
 
         let mut res: Vec<(usize, usize)> = Vec::new();
         for i in b {
-            res.push((i / length, i % length - 1));
+            if i % length == 0 {
+                res.push((i / length - 1, length - 1));
+            } else {
+                res.push((i / length, i % length - 1));
+            }
         }
         res
     }
