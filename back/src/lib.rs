@@ -156,6 +156,9 @@ impl Checkerboard {
                     (x, y) if self.areas[x][y].click == Status::Boom => {
                         a.push_str("b");
                     }
+                    (x, y) if self.areas[x][y].click == Status::Marked && self.areas[x][y].thunder => {
+                        a.push_str("r");
+                    }
                     (x, y) if self.areas[x][y].thunder => {
                         a.push_str("t");
                     }
