@@ -22,13 +22,16 @@ fn main() {
                     }
                     (x, y) if checkerboard.areas[x][y].click == Status::Unclicked => {
                         // first click protect
-                        if checkerboard.areas[x][y].thunder == true && checkerboard.first == true {
-                            loop {
-                                checkerboard = Checkerboard::new(checkerboard.length, checkerboard.width, checkerboard.target);
-                                if checkerboard.areas[x][y].thunder == false {
-                                    break;
-                                }
-                            }
+                        // if checkerboard.areas[x][y].thunder == true && checkerboard.first == true {
+                        //     loop {
+                        //         checkerboard = Checkerboard::new(checkerboard.length, checkerboard.width, checkerboard.target);
+                        //         if checkerboard.areas[x][y].thunder == false {
+                        //             break;
+                        //         }
+                        //     }
+                        // }
+                        while checkerboard.areas[x][y].property != 0 && checkerboard.first == true {
+                            checkerboard = Checkerboard::new(checkerboard.length, checkerboard.width, checkerboard.target);
                         }
                         checkerboard.first = false;
 

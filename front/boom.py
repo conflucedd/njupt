@@ -1,5 +1,7 @@
 from tkinter import *
 import lib
+import time
+from threading import Thread
 
 is_changed = False
 
@@ -31,7 +33,23 @@ def game_page(c):
 
     # tell you win or lose
     r_state = Label(gp, width = 20, height= 1, text = " ", font= ("Arial", 50))
-    r_state.place(x = 960, y = 80, anchor = "center")
+    r_state.place(x = 960, y = 100, anchor = "center")
+
+    # tell the time
+    timer = Label(gp, width = 15, height = 1, text = "time used: 0 secs", font = ("Arial", 30))
+    timer.place(x = 300, y = 100, anchor = "center")
+
+    # timer
+    def update_time(timer):
+        time_used = 0
+        while True:
+            time.sleep(1)
+            time_used += 1
+            timer.config(text = f"time used: {time_used} secs")
+    '''
+    t = Thread(target = update_time, args = [timer])
+    t.start()
+    '''
 
     #go back to the start page
     def return_to_start():
@@ -62,6 +80,7 @@ def game_page(c):
             sp.destroy()
 
         def go_back():
+            #t.stop()
             sp.destroy()
             gp.destroy()
             root.deiconify()
@@ -115,14 +134,16 @@ def game_page(c):
 
     # update the map
     def update_button_state():
+
         global is_changed
         is_changed = True
+
         for i in range(row):
             for j in range(col):
                 if button_states[(i, j)] == 'r':
                     buttons[(i, j)].config(text = '#', bg = 'green')
                 elif button_states[(i, j)] == 't':
-                    buttons[(i, j)].config(text = 'T', bg = 'red')    
+                    buttons[(i, j)].config(text = 'T', bg = 'orange')
                 elif button_states[(i, j)] == '0':
                     buttons[(i, j)].config(text = ' ', bg = 'yellow')
                 elif button_states[(i, j)] == '@':
