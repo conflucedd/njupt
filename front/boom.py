@@ -109,6 +109,19 @@ def open_game_page(c):
         # you win
         if s == "~win$":
             disable_buttons()
+            lib.send("~answer$")
+            s = lib.recv()
+
+            a = 1
+            for i in range(row):
+                for j in range(col):
+                    map[i][j] = s[a]
+                    a += 1
+            
+            for i in range(row):
+                for j in range(col):
+                    button_states[(i, j)] = map[i][j]
+            update_button_state()
             sign_page("you win!!!")
 
         # you lose
