@@ -43,6 +43,7 @@ fn main() {
                         checkerboard.first = false;
 
                         if checkerboard.areas[x][y].thunder == true {
+                            checkerboard.areas[x][y].click = Status::Boom;
                             send("~lost$");
                             continue;
                         }
