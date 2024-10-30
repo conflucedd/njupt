@@ -17,6 +17,29 @@ pub struct Area {
     pub property: i32 // hint number
 }
 
+pub fn around(x: usize, y: usize, length: usize, width: usize) -> Vec<(usize, usize)> {
+    let mut a = Vec::new();
+    
+    if x >= 1 && y >= 1
+        { a.push((x - 1, y - 1)); }
+    if x >= 1 
+        { a.push((x - 1, y)); }
+    if x >= 1  && y + 1 < width 
+        { a.push((x - 1, y + 1)); }
+    if y >= 1
+        { a.push((x, y - 1)); }
+    if y + 1 < width
+        { a.push((x, y + 1)); }
+    if x + 1 < length && y >= 1
+        { a.push((x + 1, y - 1)); }
+    if x + 1 < length
+        { a.push((x + 1, y)); }
+    if x + 1 < length && y + 1 < width
+        { a.push((x + 1, y + 1)); }
+    
+    a
+}
+
 impl Area {
     fn new() -> Self {
         Area {
@@ -265,55 +288,24 @@ pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
 
 pub fn auto_click(checkerboard: &mut Checkerboard, x: usize, y: usize) -> bool {
     let mut a = 0;
-    if x >= 1 && y >= 1 && checkerboard.areas[x - 1][y - 1].click == Status::Marked
-        { a += 1 }
-    if x >= 1 && checkerboard.areas[x - 1][y].click == Status::Marked
-        { a += 1 }
-    if x >= 1  && y + 1 < checkerboard.width && checkerboard.areas[x - 1][y + 1].click == Status::Marked
-        { a += 1 }
-    if y >= 1 && checkerboard.areas[x][y - 1].click == Status::Marked
-        { a += 1 }
-    if y + 1 < checkerboard.width && checkerboard.areas[x][y + 1].click == Status::Marked
-        { a += 1 }
-    if x + 1 < checkerboard.length && y >= 1 && checkerboard.areas[x + 1][y - 1].click == Status::Marked
-        { a += 1 }
-    if x + 1 < checkerboard.length && checkerboard.areas[x + 1][y].click == Status::Marked
-        { a += 1 }
-    if x + 1 < checkerboard.length && y + 1 < checkerboard.width && checkerboard.areas[x + 1][y + 1].click == Status::Marked
-        { a += 1 }
+
+    for (x, y) in around(x, y, checkerboard.length, checkerboard.width) {
+        if checkerboard.areas[x][y].click == Status::Marked
+            { a += 1; }
+    }
 
     if a >= checkerboard.areas[x][y].property {
-        if x >= 1 && y >= 1 && checkerboard.areas[x - 1][y - 1].click == Status::Unclicked
-            { checkerboard.areas[x - 1][y - 1].click = Status::Known }
-        if x >= 1 && checkerboard.areas[x - 1][y].click == Status::Unclicked
-            { checkerboard.areas[x - 1][y - 1].click = Status::Known }
-        if x >= 1  && y + 1 < checkerboard.width && checkerboard.areas[x - 1][y + 1].click == Status::Unclicked
-            { checkerboard.areas[x - 1][y - 1].click = Status::Known }
-        if y >= 1 && checkerboard.areas[x][y - 1].click == Status::Unclicked
-            { checkerboard.areas[x - 1][y - 1].click = Status::Known }
-        if y + 1 < checkerboard.width && checkerboard.areas[x][y + 1].click == Status::Unclicked
-            { checkerboard.areas[x - 1][y - 1].click = Status::Known }
-        if x + 1 < checkerboard.length && y >= 1 && checkerboard.areas[x + 1][y - 1].click == Status::Unclicked
-            { checkerboard.areas[x - 1][y - 1].click = Status::Known }
-        if x + 1 < checkerboard.length && checkerboard.areas[x + 1][y].click == Status::Unclicked
-            { checkerboard.areas[x - 1][y - 1].click = Status::Known }
-        if x + 1 < checkerboard.length && y + 1 < checkerboard.width && checkerboard.areas[x + 1][y + 1].click == Status::Unclicked
-            { checkerboard.areas[x - 1][y - 1].click = Status::Known }
-
-        if x >= 1 && y >= 1 && checkerboard.areas[x - 1][y - 1].thunder == false
-            && x >= 1 && checkerboard.areas[x - 1][y].thunder == false
-            && x >= 1  && y + 1 < checkerboard.width && checkerboard.areas[x - 1][y + 1].thunder == false
-            && y >= 1 && checkerboard.areas[x][y - 1].thunder == false
-            && y + 1 < checkerboard.width && checkerboard.areas[x][y + 1].thunder == false
-            && x + 1 < checkerboard.length && y >= 1 && checkerboard.areas[x + 1][y - 1].thunder == false
-            && x + 1 < checkerboard.length && checkerboard.areas[x + 1][y].thunder == false
-            && x + 1 < checkerboard.length && y + 1 < checkerboard.width && checkerboard.areas[x + 1][y + 1].thunder == false {
-                return true; // means ok, not win
-            } else {
-                return false; // means lost
+        for (x, y) in around(x, y, checkerboard.length, checkerboard.width) {
+            if checkerboard.areas[x][y].click == Status::Unclicked {
+                if checkerboard.areas[x][y].thunder {
+                    checkerboard.areas[x][y].click = Status::Boom;
+                    return false; // means lost
+                }
+                checkerboard.areas[x][y].click = Status::Known;
             }
+        }
     }
-    true
+    true // means ok, not win
 }
 
 pub fn check_win(checkreboard: &Checkerboard) -> bool {
