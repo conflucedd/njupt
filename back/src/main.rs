@@ -26,56 +26,60 @@ fn main() {
             }
             s if s.starts_with("~click") => {
                 let (x, y) = extract_position(message);
-                if checkerboard.areas[x][y].click != Status::Unclicked {
-                    send(&checkerboard.to_string());
-                    continue;
-                }
-                if checkerboard.areas[x][y].thunder == true && checkerboard.first == false {
-                    send("~lost$");
-                    checkerboard.areas[x][y].click = Status::Special;
-                    // todo: send lose map
-                    // send(&checkerboard.to_string_at_fail());
-                    continue;
-                }
-                if checkerboard.areas[x][y].thunder == true && checkerboard.first == true {
-                    loop {
-                        checkerboard = Checkerboard::new(checkerboard.length, checkerboard.width);
-                        if checkerboard.areas[x][y].thunder == false {
-                            checkerboard.first = false;
-                            break;
-                        }
+                match (x, y) {
+                    (x, y) if checkerboard.areas[x][y].click == Status::Marked => {
+                        checkerboard.areas[x][y].click = Status::Unclicked;
                     }
+                    (x, y) if checkerboard.areas[x][y].click == Status::Unclicked => {
+                        // first click protect
+                        if checkerboard.areas[x][y].thunder == true && checkerboard.first == true {
+                            loop {
+                                checkerboard = Checkerboard::new(checkerboard.length, checkerboard.width);
+                                if checkerboard.areas[x][y].thunder == false {
+                                    break;
+                                }
+                            }
+                        }
+                        checkerboard.first = false;
+
+                        if checkerboard.areas[x][y].thunder == true {
+                            send("~lost$");
+                            continue;
+                        }
+                        checkerboard.areas[x][y].click = Status::Known;
+                        if checkerboard.areas[x][y].property == 0 {
+                            auto_expand(&mut checkerboard, x, y);
+                        }
+                        if check_win(&checkerboard)
+                        {
+                            send("~win$");
+                            continue;
+                        };
+                    }
+                    (x, y) if checkerboard.areas[x][y].click == Status::Known => {
+                        auto_click(&mut checkerboard, x, y);
+                        if check_win(&checkerboard)
+                        {
+                            send("~win$");
+                            continue;
+                        };
+                    }
+                    _ => {}
                 }
-                
-                checkerboard.areas[x][y].click = Status::Known;
-                checkerboard.first = false;
-                if checkerboard.areas[x][y].property == 0 {
-                    auto_expand(&mut checkerboard, x, y);
-                }
-                if check_win(&checkerboard)
-                {
-                    send("~win$");
-                    continue;
-                };
+
                 send(&checkerboard.to_string());
             }
             s if s.starts_with("~mark") => {
                 let (x, y) = extract_position(message);
-                if checkerboard.areas[x][y].click == Status::Unclicked {
-                    checkerboard.areas[x][y].click = Status::Marked;
-                    send(&checkerboard.to_string());
-                    continue;
-                };
-                if checkerboard.areas[x][y].click == Status::Marked {
-                    checkerboard.areas[x][y].click = Status::Unclicked;
-                    send(&checkerboard.to_string());
-                    continue;
+                match (x, y) {
+                    (x, y) if checkerboard.areas[x][y].click == Status::Unclicked => {
+                        checkerboard.areas[x][y].click = Status::Marked;
+                    }
+                    (x, y) if checkerboard.areas[x][y].click == Status::Marked => {
+                        checkerboard.areas[x][y].click = Status::Unclicked;
+                    }
+                    _ => {}
                 }
-                send(&checkerboard.to_string()); // random click
-            }
-            s if s.starts_with("~complete") => {
-                let (x, y) = extract_position(message);
-                auto_click(&mut checkerboard, x, y);
                 send(&checkerboard.to_string());
             }
             s if s.starts_with("~abort") => {
@@ -85,9 +89,7 @@ fn main() {
             s if s.starts_with("~stop$") => {
                 exit(0);
             }
-            &_ => {
-                exit(2);
-            }
+            _ => {}
         }
     }
 }

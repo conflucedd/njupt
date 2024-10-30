@@ -7,8 +7,7 @@ use std::collections::VecDeque;
 pub enum Status {
     Unclicked,
     Marked,
-    Known,
-    Special
+    Known
 }
 
 pub struct Area {
@@ -112,33 +111,6 @@ impl Checkerboard {
         a.push('~');
         for x in 0..self.length {
             for y in 0..self.width {
-                if self.areas[x][y].click == Status::Marked {
-                    a.push_str("@");
-                }
-                if self.areas[x][y].click == Status::Unclicked {
-                    a.push_str("9");
-                }
-                if self.areas[x][y].click == Status::Known {
-                    a.push_str(&self.areas[x][y].property.to_string());
-                }
-            }
-        }
-        a.push('$');
-        a
-    }
-
-    pub fn to_string_at_fail(&self) -> String {
-        let mut a = String::new();
-        a.push('~');
-        for x in 0..self.length {
-            for y in 0..self.width {
-                if self.areas[x][y].click == Status::Special {
-                    a.push_str("s");
-                    continue;
-                }
-                if self.areas[x][y].thunder == true {
-                    a.push_str("t");
-                }
                 if self.areas[x][y].click == Status::Marked {
                     a.push_str("@");
                 }
