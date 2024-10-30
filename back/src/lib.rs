@@ -209,6 +209,7 @@ pub fn recv() -> String {
     }
 
     let message = fs::read_to_string("/tmp/send").unwrap();
+    println!("message: {}", &message); // for debug
     fs::remove_file("/tmp/send").unwrap();
     message
 }
