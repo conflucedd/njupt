@@ -132,20 +132,23 @@ impl Checkerboard {
         a.push('~');
         for x in 0..self.length {
             for y in 0..self.width {
-                if self.areas[x][y].click == Status::Marked {
-                    a.push_str("@");
-                }
-                if self.areas[x][y].click == Status::Unclicked {
-                    a.push_str("9");
-                }
-                if self.areas[x][y].click == Status::Known {
-                    a.push_str(&self.areas[x][y].property.to_string());
-                }
-                if self.areas[x][y].thunder {
-                    a.push_str("t");
-                }
-                if self.areas[x][y].click == Status::Boom {
-                    a.push_str("b");
+                match (x, y) {
+                    (x, y) if self.areas[x][y].click == Status::Boom => {
+                        a.push_str("b");
+                    }
+                    (x, y) if self.areas[x][y].thunder => {
+                        a.push_str("t");
+                    }
+                    (x, y) if self.areas[x][y].click == Status::Marked => {
+                        a.push_str("@");
+                    }
+                    (x, y) if self.areas[x][y].click == Status::Unclicked => {
+                        a.push_str("9");
+                    }
+                    (x, y) if self.areas[x][y].click == Status::Known => {
+                        a.push_str(&self.areas[x][y].property.to_string());
+                    }
+                    _ => {}
                 }
             }
         }
