@@ -216,31 +216,6 @@ pub fn extract_length_and_width(a: String) -> (usize, usize) {
     extract_position(a)
 }
 
-pub fn extract_position(a: String) -> (usize, usize) {
-    let mut str_itr = a.chars();
-    let mut x: String = String::new();
-    let mut y: String = String::new();
-
-    while let Some(c) = str_itr.next() {
-        if c == ',' {
-            break;
-        }
-        if c.is_numeric() {
-            x.push(c);
-        }
-    }
-    while let Some(c) = str_itr.next() {
-        if c == ',' {
-            break;
-        }
-        if c.is_numeric() {
-            y.push(c);
-        }
-    }
-    println!("{}, {}", x, y);
-    (x.parse().unwrap(), y.parse().unwrap())
-}
-
 fn extract_number<I>(a: &mut I) -> usize
 where
     I: Iterator<Item = char>,
@@ -257,7 +232,7 @@ where
     x.parse().unwrap()
 }
 
-pub fn extract_position2(a: String) -> (usize, usize) {
+pub fn extract_position(a: String) -> (usize, usize) {
     let mut str_itr = a.chars();
     (extract_number(&mut str_itr), extract_number(&mut str_itr))
 }
