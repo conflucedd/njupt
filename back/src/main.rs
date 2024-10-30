@@ -82,6 +82,9 @@ fn main() {
             s if s.starts_with("~answer") => {
                 send(&checkerboard.to_answer());
             }
+            s if s.starts_with("~left") => {
+                send(&checkerboard.left_target.to_string());
+            }
             _ => {}
         }
     }
