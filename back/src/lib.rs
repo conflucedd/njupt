@@ -305,9 +305,9 @@ pub fn auto_click(checkerboard: &mut Checkerboard, x: usize, y: usize) -> bool {
             && x + 1 < checkerboard.length && y >= 1 && checkerboard.areas[x + 1][y - 1].thunder == false
             && x + 1 < checkerboard.length && checkerboard.areas[x + 1][y].thunder == false
             && x + 1 < checkerboard.length && y + 1 < checkerboard.width && checkerboard.areas[x + 1][y + 1].thunder == false {
-                return true;
+                return true; // means ok, not win
             } else {
-                return false;
+                return false; // means lost
             }
     }
     true
