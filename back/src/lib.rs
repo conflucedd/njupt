@@ -235,44 +235,41 @@ pub fn extract_position(a: String) -> (usize, usize) {
     (x.parse().unwrap(), y.parse().unwrap())
 }
 
-pub fn expand(checkerboard: &mut Checkerboard, a: &mut VecDeque<(usize, usize)>) -> () {
-    let (x, y) = a.pop_front().unwrap();
-    if x >= 1 && checkerboard.areas[x - 1][y].click == Status::Unclicked {
-        checkerboard.areas[x - 1][y].click = Status::Known;
-        
-        if checkerboard.areas[x - 1][y].property == 0 {
-            a.push_back((x - 1, y));
-        }
-    }
-    if y >= 1 && checkerboard.areas[x][y - 1].click == Status::Unclicked {
-        checkerboard.areas[x][y - 1].click = Status::Known;
-        
-        if checkerboard.areas[x][y - 1].property == 0 {
-            a.push_back((x, y - 1));
-        }
-    }
-    if y + 1 < checkerboard.width && checkerboard.areas[x][y + 1].click == Status::Unclicked {
-        checkerboard.areas[x][y + 1].click = Status::Known;
-        
-        if checkerboard.areas[x][y + 1].property == 0 {
-            a.push_back((x, y + 1));
-        }
-    }
-    if x + 1 < checkerboard.length && checkerboard.areas[x + 1][y].click == Status::Unclicked {
-        checkerboard.areas[x + 1][y].click = Status::Known;
-        
-        if checkerboard.areas[x + 1][y].property == 0 {
-            a.push_back((x + 1, y));
-        }
-    }
-}
 
 pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {
     let mut a: VecDeque<(usize, usize)> = VecDeque::new();
     a.push_back((x, y));
     
     while a.is_empty() == false {
-        expand(checkerboard, &mut a); 
+        let (x, y) = a.pop_front().unwrap();
+        if x >= 1 && checkerboard.areas[x - 1][y].click == Status::Unclicked {
+            checkerboard.areas[x - 1][y].click = Status::Known;
+            
+            if checkerboard.areas[x - 1][y].property == 0 {
+                a.push_back((x - 1, y));
+            }
+        }
+        if y >= 1 && checkerboard.areas[x][y - 1].click == Status::Unclicked {
+            checkerboard.areas[x][y - 1].click = Status::Known;
+            
+            if checkerboard.areas[x][y - 1].property == 0 {
+                a.push_back((x, y - 1));
+            }
+        }
+        if y + 1 < checkerboard.width && checkerboard.areas[x][y + 1].click == Status::Unclicked {
+            checkerboard.areas[x][y + 1].click = Status::Known;
+            
+            if checkerboard.areas[x][y + 1].property == 0 {
+                a.push_back((x, y + 1));
+            }
+        }
+        if x + 1 < checkerboard.length && checkerboard.areas[x + 1][y].click == Status::Unclicked {
+            checkerboard.areas[x + 1][y].click = Status::Known;
+            
+            if checkerboard.areas[x + 1][y].property == 0 {
+                a.push_back((x + 1, y));
+            }
+        }
     }
 }
 
