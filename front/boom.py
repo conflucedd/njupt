@@ -205,6 +205,11 @@ def game_page(c):
                 button_states[(i, j)] = map[i][j]
         update_button_state()
 
+        # get the number of the remaining mines
+        lib.send("~left$")
+        num = lib.recv()
+        r_state.config(text = num)
+
     # when close the game page, open the start page
     def on_close():
         gp.destroy()
