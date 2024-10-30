@@ -241,18 +241,12 @@ pub fn extract_position(a: String) -> (usize, usize) {
     (x.parse().unwrap(), y.parse().unwrap())
 }
 
-fn find_min<'a, I>(vals: I) -> Option<&'a u32>
+fn extract_number<I>(a: &mut I) -> usize
 where
-    I: Iterator<Item = &'a u32>,
+    I: Iterator<Item = char>,
 {
-    vals.min()
-}
-
-pub fn extract_number(a: String) -> (usize, usize) {
-    let mut str_itr = a.chars();
-    let mut x: String = String::new();
-
-    while let Some(c) = str_itr.next() {
+    let mut x = String::new();
+    while let Some(c) = a.next() {
         if c == ',' {
             break;
         }
@@ -261,6 +255,11 @@ pub fn extract_number(a: String) -> (usize, usize) {
         }
     }
     x.parse().unwrap()
+}
+
+pub fn extract_position2(a: String) -> (usize, usize) {
+    let mut str_itr = a.chars();
+    (extract_number(&mut str_itr), extract_number(&mut str_itr))
 }
 
 pub fn auto_expand(checkerboard: &mut Checkerboard, x: usize, y: usize) -> () {

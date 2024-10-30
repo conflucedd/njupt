@@ -24,7 +24,7 @@ fn main() {
                 send("~OK$");
             }
             s if s.starts_with("~click") => {
-                let (x, y) = extract_position(message);
+                let (x, y) = extract_position2(message);
                 match (x, y) {
                     (x, y) if checkerboard.areas[x][y].click == Status::Marked => {
                         checkerboard.areas[x][y].click = Status::Unclicked;
