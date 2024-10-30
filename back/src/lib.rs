@@ -55,7 +55,8 @@ pub struct Checkerboard {
     pub length: usize,
     pub width: usize,
     pub first: bool,
-    pub target: usize
+    pub target: usize,
+    pub left_target: i32
 }
 
 impl Checkerboard {
@@ -65,7 +66,8 @@ impl Checkerboard {
             length,
             width,
             target,
-            first: true
+            first: true,
+            left_target: i32::try_from(target).unwrap()
         };
         for _x in 0..length {
             let mut vec = Vec::new();
