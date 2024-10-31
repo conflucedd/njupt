@@ -2,7 +2,7 @@ from tkinter import *
 from functools import partial
 import lib
 
-def game_page(root, level):
+def game_page(root, map):
     # hide the start page
     root.withdraw()
 
@@ -34,7 +34,7 @@ def game_page(root, level):
     gb = Button(gp, text = "go back", font= ("Arial", 30), width = 10, height = 1, command = partial(lib.return_to_start, root, gp, timer))
     gb.place(x = 1780, y = 45, anchor = "center")
 
-    lib.draw_map(frame, level, r_state, timer)
+    lib.draw_map(frame, r_state, timer, map)
 
     def on_close():
         gp.destroy()

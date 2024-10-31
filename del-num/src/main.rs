@@ -14,6 +14,10 @@ fn main() {
     let target: usize = buffer.trim().parse().unwrap();
 
     for _i in 0..target {
+        if a.len() == 1 {
+            a.pop();
+            break;
+        }
         for j in 0..(a.len() - 1) {
             if a[j] > a[j + 1] {
                 a.remove(j);

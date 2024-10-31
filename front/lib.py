@@ -20,22 +20,13 @@ def recv():
     os.remove("/tmp/recv")
     return s
 
-def draw_map(frame, level, r_state, timer):
+def draw_map(frame, r_state, timer, map):
     global is_changed
     is_changed = False
 
-    if level == 1:
-        row = 9
-        col = 9
-        mine_num = 10
-    elif level == 2:
-        row = 16
-        col = 16
-        mine_num = 40
-    elif level == 3:
-        row = 16
-        col = 30
-        mine_num = 99
+    row = map[0]
+    col = map[1]
+    mine_num = map[2]
 
     buttons = {}
     states = {}
