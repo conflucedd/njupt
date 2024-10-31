@@ -29,10 +29,6 @@ def game_page(c):
     gp.grid_rowconfigure(0, weight = 1)
     gp.grid_columnconfigure(0, weight = 1)
 
-    # the frame to put the control buttons
-    frame2 = Frame(gp)
-    frame2.place(x = 1920, y = 400, anchor = "e")
-
     # tell you win or lose
     r_state = Label(gp, width = 20, height= 1, text = " ", font= ("Arial", 50))
     r_state.place(x = 960, y = 80, anchor = "center")
@@ -46,8 +42,9 @@ def game_page(c):
         else:
             sign_page()
 
+    # the button to go back to the start page
     b = Button(gp, text = "go back", font= ("Arial", 30), width = 10, height = 1, command = return_to_start)
-    b.place(x = 1750, y = 80, anchor = "center")
+    b.place(x = 1780, y = 45, anchor = "center")
 
     # tell you the game is not finished
     def sign_page():
@@ -80,23 +77,28 @@ def game_page(c):
 
     row = 0
     col = 0
+    mine_num = 0
     if c == 1:
         row = 9
         col = 9
+        mine_num = 10
     elif c == 2:
         row = 16
         col = 16
+        mine_num = 40
     elif c == 3:
         row = 16
         col = 30
+        mine_num = 99
 
     button_states = {}
     buttons = {}
     map = [[0 for x in range(col)] for y in range(row)]
 
     #start
-    lib.send("~start" + str(row) + "," + str(col) + "," + "10" + "$")
+    lib.send("~start" + str(row) + "," + str(col) + "," + str(mine_num) + "$")
     lib.recv()
+    r_state.config(text = "remaining mines: " + str(mine_num))
 
     # draw the map
     for i in range(row):
@@ -115,17 +117,20 @@ def game_page(c):
     def update_button_state():
         global is_changed
         is_changed = True
-
         for i in range(row):
             for j in range(col):
-                if button_states[(i, j)] == '9':
-                    buttons[(i, j)].config(text = ' ')
+                if button_states[(i, j)] == 'r':
+                    buttons[(i, j)].config(text = '#', bg = 'green')
+                elif button_states[(i, j)] == 't':
+                    buttons[(i, j)].config(text = 'T', bg = 'red')    
                 elif button_states[(i, j)] == '0':
                     buttons[(i, j)].config(text = ' ', bg = 'yellow')
                 elif button_states[(i, j)] == '@':
-                    buttons[(i, j)].config(text = '@')
+                    buttons[(i, j)].config(text = '#')
                 elif button_states[(i, j)] == 'b':
-                    buttons[(i, j)].config(text = 'b', bg = 'red')
+                    buttons[(i, j)].config(text = '!', bg = 'red')
+                elif button_states[(i, j)] == '9':
+                    buttons[(i, j)].config(text = ' ')
                 else:
                     buttons[(i, j)].config(text = button_states[(i, j)], bg = 'yellow')
 
@@ -204,6 +209,11 @@ def game_page(c):
             for j in range(col):
                 button_states[(i, j)] = map[i][j]
         update_button_state()
+
+        # get the number of the remaining mines
+        lib.send("~left$")
+        num = lib.recv()
+        r_state.config(text = "remaining mines: " + str(num))
 
     # when close the game page, open the start page
     def on_close():

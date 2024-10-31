@@ -18,7 +18,7 @@ fn main() {
                 match (x, y) {
                     (x, y) if checkerboard.areas[x][y].click == Status::Marked => {
                         checkerboard.areas[x][y].click = Status::Unclicked;
-                        checkerboard.left_target -= 1;
+                        checkerboard.left_target += 1;
                     }
                     (x, y) if checkerboard.areas[x][y].click == Status::Unclicked => {
                         // first click protect
@@ -69,11 +69,11 @@ fn main() {
                 match (x, y) {
                     (x, y) if checkerboard.areas[x][y].click == Status::Unclicked => {
                         checkerboard.areas[x][y].click = Status::Marked;
-                        checkerboard.left_target += 1;
+                        checkerboard.left_target -= 1;
                     }
                     (x, y) if checkerboard.areas[x][y].click == Status::Marked => {
                         checkerboard.areas[x][y].click = Status::Unclicked;
-                        checkerboard.left_target -= 1;
+                        checkerboard.left_target += 1;
                     }
                     _ => {}
                 }
