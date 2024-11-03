@@ -4,7 +4,6 @@ import time
 import os
 
 is_changed = False
-is_playing = True
 
 def send(s):
     while (os.path.exists("/tmp/send")):     
@@ -52,10 +51,11 @@ def left_click(event, x, y, row, col, buttons, states, r_state, timer):
     send("~click" + str(x) + "," + str(y) + "$")
     s = recv()
 
+    timer.start_timer()
+
     # game finish
     if s == "~win$" or s == "~lost$":
-        global is_playing
-        is_playing = False
+        timer.stop_timer()
 
         disable_buttons(row, col, buttons)
 
@@ -97,8 +97,6 @@ def disable_buttons(row, col, buttons):
             buttons[(i, j)].config(state = "disabled")
 
 def update_button_state(buttons, states, row, col, timer):
-    timer.update_timer()
-
     global is_changed
     is_changed = True
 
@@ -163,17 +161,22 @@ class MineSweeperTimer:
         self.timer_label.place(x = 300, y = 100, anchor = "center")
 
         self.time_elapsed = 0
-        self.timer_running = True
+        self.timer_running = False
         self.timer_id = None
 
+    def start_timer(self):
+        if not self.timer_running:
+            self.timer_running = True
+            self.update_timer()
+
     def update_timer(self):
-        global is_playing
-        if is_playing == False:
-            self.timer_running = False
         if self.timer_running:
             self.timer_label.config(text = f"time used: {self.time_elapsed} secs")
             self.timer_id = self.root.after(1000, self.update_timer)
             self.time_elapsed += 1
+
+    def stop_timer(self):
+            self.timer_running = False
 
     def reset_timer(self):
         self.time_elapsed = 0

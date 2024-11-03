@@ -9,6 +9,7 @@ def game_page(root, map):
     # initialize the game page
     gp = Toplevel(root)
     gp.title("boom")
+    root.resizable(False, False)
     window_width = 1920
     window_height = 1080
     screen_width = gp.winfo_screenwidth()
