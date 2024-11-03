@@ -100,6 +100,9 @@ def update_button_state(buttons, states, row, col, timer):
     global is_changed
     is_changed = True
 
+    bomb_image = PhotoImage(file = '/home/carter/njupt/front/bomb.png')
+    flag_image = PhotoImage(file = '/home/carter/njupt/front/bomb.png')
+
     for i in range(row):
         for j in range(col):
             if states[(i, j)] == 'r':
