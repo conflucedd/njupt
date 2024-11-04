@@ -4,6 +4,9 @@ import time
 import os
 
 is_changed = False
+e_time = None
+m_time = None
+h_time = None
 
 def send(s):
     while (os.path.exists("/tmp/send")):     
@@ -36,18 +39,18 @@ def draw_map(frame, r_state, timer, map):
 
     for i in range(row):
         for j in range(col):
-            btn = Button(frame, width = 1, height = 1, font= ("Arial", 20))
+            btn = Button(frame, width = 1, height = 1, font= ("Arial", 20), compound = "center")
             btn.config(text = ' ')
             btn.grid(row = i, column = j)
 
-            btn.bind("<Button-1>", lambda event, x=i, y=j: left_click(event, x, y, row, col, buttons, states, r_state, timer))
+            btn.bind("<Button-1>", lambda event, x=i, y=j: left_click(event, x, y, row, col, mine_num, buttons, states, r_state, timer))
             btn.bind("<Button-3>", lambda event, x=i, y=j: right_click(event, x, y, row, col, buttons, states, r_state, timer))
 
             buttons[(i, j)] = btn
 
     r_state.config(text = str(mine_num) + " mines remaining")
 
-def left_click(event, x, y, row, col, buttons, states, r_state, timer):
+def left_click(event, x, y, row, col, mine_num, buttons, states, r_state, timer):
     send("~click" + str(x) + "," + str(y) + "$")
     s = recv()
 
@@ -56,6 +59,15 @@ def left_click(event, x, y, row, col, buttons, states, r_state, timer):
     # game finish
     if s == "~win$" or s == "~lost$":
         timer.stop_timer()
+        if s == "~win$" and row == 9 and col == 9 and mine_num == 10:
+            global e_time
+            e_time = "level 1 record: " + str(timer.time_elapsed) + " seconds"
+        elif s == "~win$" and row == 16 and col == 16 and mine_num == 40:
+            global m_time
+            m_time = "level 2 record: " + str(timer.time_elapsed) + " seconds"
+        elif s == "~win$" and row == 16 and col == 30 and mine_num == 99:
+            global h_time
+            h_time = "level 3 record: " + str(timer.time_elapsed) + " seconds"
 
         disable_buttons(row, col, buttons)
 
@@ -175,8 +187,9 @@ class MineSweeperTimer:
     def update_timer(self):
         if self.timer_running:
             self.timer_label.config(text = f"time used: {self.time_elapsed} secs")
-            self.timer_id = self.root.after(1000, self.update_timer)
             self.time_elapsed += 1
+            self.timer_id = self.root.after(1000, self.update_timer)
+            
 
     def stop_timer(self):
             self.timer_running = False
@@ -184,3 +197,17 @@ class MineSweeperTimer:
     def reset_timer(self):
         self.time_elapsed = 0
         self.timer_label.config(text = "time used: 0 secs")
+
+def get_record(n):
+    global e_time
+    global m_time
+    global h_time
+
+    if n == 1:
+        return e_time
+    elif n == 2:
+        return m_time
+    elif n == 3:
+        return h_time
+    else:
+        return 0

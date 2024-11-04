@@ -1,5 +1,7 @@
 from tkinter import *
+from functools import partial
 import game
+import record
 
 # main menu
 root = Tk()
@@ -46,9 +48,9 @@ def place_forget():
 # level select
 level = IntVar()
 level.set(1)
-r1 = Radiobutton(root, text = "easy", variable = level, value = 1, font= ("Arial", 20), command = place_forget)
-r2 = Radiobutton(root, text = "medium", variable = level, value = 2, font= ("Arial", 20), command = place_forget)
-r3 = Radiobutton(root, text = "hard", variable = level, value = 3, font= ("Arial", 20), command = place_forget)
+r1 = Radiobutton(root, text = "level 1", variable = level, value = 1, font= ("Arial", 20), command = place_forget)
+r2 = Radiobutton(root, text = "level 2", variable = level, value = 2, font= ("Arial", 20), command = place_forget)
+r3 = Radiobutton(root, text = "level 3", variable = level, value = 3, font= ("Arial", 20), command = place_forget)
 r4 = Radiobutton(root, text = "custom", variable = level, value = 4, font= ("Arial", 20), command = place_custom)
 r1.place(x = 400, y = 200)
 r2.place(x = 400, y = 275)
@@ -77,5 +79,8 @@ def get_custom():
 
 b = Button(root, text = "start", font= ("Arial", 30), width = 10, height = 1, command = lambda: game.game_page(root, get_custom()))
 b.place(x = 375, y = 575)
+
+record = Button(root, text = "record", font= ("Arial", 30), width = 10, height = 1, command = partial(record.record_page, root))
+record.place(x = 375, y = 675)
 
 mainloop()
