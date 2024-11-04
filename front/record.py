@@ -1,5 +1,4 @@
 from tkinter import *
-import lib
 
 def record_page(root):
     # hide the start page
@@ -33,8 +32,15 @@ def record_page(root):
     l2.place(x = 100, y = 250)
     l3.place(x = 100, y = 400)
 
+    gb = Button(rp, text = "go back", font= ("Arial", 30), width = 10, height = 1, command = lambda: go_back(root, rp))
+    gb.place(x = 660, y = 50, anchor = "center")
+
     def on_close():
         rp.destroy()
         root.deiconify()
 
     rp.protocol("WM_DELETE_WINDOW", on_close)
+    
+def go_back(root, rp):
+    rp.destroy()
+    root.deiconify()

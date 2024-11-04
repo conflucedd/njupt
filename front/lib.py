@@ -97,7 +97,7 @@ def left_click(event, x, y, row, col, mine_num, buttons, states, r_state, timer)
          for j in range(col):
             states[(i, j)] = s[a]
             a += 1
-    update_button_state(buttons, states, row, col, timer)
+    update_button_state(buttons, states, row, col)
 
 def right_click(event, x, y, row, col, buttons, states, r_state):
     send("~mark" + str(x) + "," + str(y) + "$")
@@ -122,7 +122,7 @@ def disable_buttons(row, col, buttons):
             buttons[(i, j)].unbind("<Button-3>")
             buttons[(i, j)].config(state = "disabled")
 
-def update_button_state(buttons, states, row, col, timer):
+def update_button_state(buttons, states, row, col):
     global is_changed
     is_changed = True
 
@@ -134,7 +134,7 @@ def update_button_state(buttons, states, row, col, timer):
             if states[(i, j)] == 'r':
                 buttons[(i, j)].config(text = '#', bg = 'green')
             elif states[(i, j)] == 't':
-                buttons[(i, j)].config(text = 'T', bg = 'orange')
+                buttons[(i, j)].config(text = 'M', bg = 'orange')
             elif states[(i, j)] == '0':
                 buttons[(i, j)].config(text = ' ', bg = 'yellow')
             elif states[(i, j)] == '@':
@@ -159,6 +159,7 @@ def sign_page(root, gp, timer):
     sp.title("")
     window_width = 800
     window_height = 200
+    sp.resizable(False, False)
     screen_width = sp.winfo_screenwidth()
     screen_height = sp.winfo_screenheight()
     position_top = int(screen_height/2 - window_height/2)
@@ -187,7 +188,7 @@ class MineSweeperTimer:
     def __init__(self, gp):
         self.root = gp
         self.timer_label = Label(gp, width = 15, height = 1, text = "time used: 0 secs", font = ("Arial", 30))
-        self.timer_label.place(x = 300, y = 100, anchor = "center")
+        self.timer_label.place(x = 300, y = 50, anchor = "center")
 
         self.time_elapsed = 0
         self.timer_running = False

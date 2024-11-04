@@ -25,15 +25,15 @@ def game_page(root, map):
     gp.grid_columnconfigure(0, weight = 1)
 
     # tell the number of the unmarked mines, win or lose
-    r_state = Label(gp, width = 20, height= 1, text = " ", font= ("Arial", 50))
-    r_state.place(x = 960, y = 100, anchor = "center")
+    r_state = Label(gp, width = 20, height= 1, text = " ", font= ("Arial", 30))
+    r_state.place(x = 960, y = 50, anchor = "center")
 
     # tell the time
     timer = lib.MineSweeperTimer(gp)
 
     # the button to go back to the start page
     gb = Button(gp, text = "go back", font= ("Arial", 30), width = 10, height = 1, command = partial(lib.return_to_start, root, gp, timer))
-    gb.place(x = 1780, y = 45, anchor = "center")
+    gb.place(x = 1780, y = 50, anchor = "center")
 
     lib.draw_map(frame, r_state, timer, map)
 
