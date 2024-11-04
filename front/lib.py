@@ -3,10 +3,14 @@ from functools import partial
 import time
 import os
 
+with open("/home/carter/njupt/front/record.txt", "r") as file:
+    content = file.read()
+    parsed_strings = content.split(",")
+
 is_changed = False
-e_time = None
-m_time = None
-h_time = None
+e_time = parsed_strings[0]
+m_time = parsed_strings[1]
+h_time = parsed_strings[2]
 
 def send(s):
     while (os.path.exists("/tmp/send")):     
@@ -44,7 +48,7 @@ def draw_map(frame, r_state, timer, map):
             btn.grid(row = i, column = j)
 
             btn.bind("<Button-1>", lambda event, x=i, y=j: left_click(event, x, y, row, col, mine_num, buttons, states, r_state, timer))
-            btn.bind("<Button-3>", lambda event, x=i, y=j: right_click(event, x, y, row, col, buttons, states, r_state, timer))
+            btn.bind("<Button-3>", lambda event, x=i, y=j: right_click(event, x, y, row, col, buttons, states, r_state))
 
             buttons[(i, j)] = btn
 
@@ -56,18 +60,28 @@ def left_click(event, x, y, row, col, mine_num, buttons, states, r_state, timer)
 
     timer.start_timer()
 
+    global e_time
+    global m_time
+    global h_time
+
     # game finish
     if s == "~win$" or s == "~lost$":
         timer.stop_timer()
         if s == "~win$" and row == 9 and col == 9 and mine_num == 10:
-            global e_time
-            e_time = "level 1 record: " + str(timer.time_elapsed) + " seconds"
+            e_time = "level 1: " + str(timer.time_elapsed - 1) + " seconds"
+            strings = [e_time, m_time, h_time]
+            with open("/home/carter/njupt/front/record.txt", "w") as file:
+                file.write(",".join(strings))
         elif s == "~win$" and row == 16 and col == 16 and mine_num == 40:
-            global m_time
-            m_time = "level 2 record: " + str(timer.time_elapsed) + " seconds"
+            m_time = "level 2: " + str(timer.time_elapsed - 1) + " seconds"
+            strings = [e_time, m_time, h_time]
+            with open("/home/carter/njupt/front/record.txt", "w") as file:
+                file.write(",".join(strings))
         elif s == "~win$" and row == 16 and col == 30 and mine_num == 99:
-            global h_time
-            h_time = "level 3 record: " + str(timer.time_elapsed) + " seconds"
+            h_time = "level 3: " + str(timer.time_elapsed - 1) + " seconds"
+            strings = [e_time, m_time, h_time]
+            with open("/home/carter/njupt/front/record.txt", "w") as file:
+                file.write(",".join(strings))
 
         disable_buttons(row, col, buttons)
 
@@ -85,7 +99,7 @@ def left_click(event, x, y, row, col, mine_num, buttons, states, r_state, timer)
             a += 1
     update_button_state(buttons, states, row, col, timer)
 
-def right_click(event, x, y, row, col, buttons, states, r_state, timer):
+def right_click(event, x, y, row, col, buttons, states, r_state):
     send("~mark" + str(x) + "," + str(y) + "$")
     s = recv()
 
@@ -94,7 +108,7 @@ def right_click(event, x, y, row, col, buttons, states, r_state, timer):
         for j in range(col):
             states[(i, j)] = s[a]
             a += 1
-    update_button_state(buttons, states, row, col, timer)
+    update_button_state(buttons, states, row, col)
 
     # get the number of the remaining mines
     send("~left$")
@@ -197,17 +211,3 @@ class MineSweeperTimer:
     def reset_timer(self):
         self.time_elapsed = 0
         self.timer_label.config(text = "time used: 0 secs")
-
-def get_record(n):
-    global e_time
-    global m_time
-    global h_time
-
-    if n == 1:
-        return e_time
-    elif n == 2:
-        return m_time
-    elif n == 3:
-        return h_time
-    else:
-        return 0
