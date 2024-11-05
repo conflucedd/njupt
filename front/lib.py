@@ -35,7 +35,6 @@ def draw_map(frame, r_state, timer, map):
     mine_num = map[2]
 
     buttons = {}
-    states = {}
 
     #start
     send("~start" + str(row) + "," + str(col) + "," + str(mine_num) + "$")
@@ -47,14 +46,14 @@ def draw_map(frame, r_state, timer, map):
             btn.config(text = ' ')
             btn.grid(row = i, column = j)
 
-            btn.bind("<Button-1>", lambda event, x=i, y=j: left_click(event, x, y, row, col, mine_num, buttons, states, r_state, timer))
-            btn.bind("<Button-3>", lambda event, x=i, y=j: right_click(event, x, y, row, col, buttons, states, r_state))
+            btn.bind("<Button-1>", lambda event, x=i, y=j: left_click(event, x, y, row, col, mine_num, buttons, r_state, timer))
+            btn.bind("<Button-3>", lambda event, x=i, y=j: right_click(event, x, y, buttons, r_state))
 
             buttons[(i, j)] = btn
 
     r_state.config(text = str(mine_num) + " mines remaining")
 
-def left_click(event, x, y, row, col, mine_num, buttons, states, r_state, timer):
+def left_click(event, x, y, row, col, mine_num, buttons, r_state, timer):
     send("~click" + str(x) + "," + str(y) + "$")
     s = recv()
 
@@ -92,23 +91,14 @@ def left_click(event, x, y, row, col, mine_num, buttons, states, r_state, timer)
         send("~answer$")
         s = recv()
 
-    a = 1
-    for i in range(row):
-         for j in range(col):
-            states[(i, j)] = s[a]
-            a += 1
-    update_button_state(buttons, states, row, col)
+    if s != "~OK$" and s != "~win$" and s != "~lost$":
+        update_button_state(buttons, s)
 
-def right_click(event, x, y, row, col, buttons, states, r_state):
+def right_click(event, x, y, buttons, r_state):
     send("~mark" + str(x) + "," + str(y) + "$")
     s = recv()
 
-    a = 1
-    for i in range(row):
-        for j in range(col):
-            states[(i, j)] = s[a]
-            a += 1
-    update_button_state(buttons, states, row, col)
+    update_button_state(buttons, s)
 
     # get the number of the remaining mines
     send("~left$")
@@ -122,29 +112,27 @@ def disable_buttons(row, col, buttons):
             buttons[(i, j)].unbind("<Button-3>")
             buttons[(i, j)].config(state = "disabled")
 
-def update_button_state(buttons, states, row, col):
+def update_button_state(buttons, s):
     global is_changed
     is_changed = True
 
-    bomb_image = PhotoImage(file = '/home/carter/njupt/front/bomb.png')
-    flag_image = PhotoImage(file = '/home/carter/njupt/front/bomb.png')
-
-    for i in range(row):
-        for j in range(col):
-            if states[(i, j)] == 'r':
-                buttons[(i, j)].config(text = '#', bg = 'green')
-            elif states[(i, j)] == 't':
-                buttons[(i, j)].config(text = 'M', bg = 'orange')
-            elif states[(i, j)] == '0':
-                buttons[(i, j)].config(text = ' ', bg = 'yellow')
-            elif states[(i, j)] == '@':
-                buttons[(i, j)].config(text = '#')
-            elif states[(i, j)] == 'b':
-                buttons[(i, j)].config(text = '!', bg = 'red')
-            elif states[(i, j)] == '9':
-                buttons[(i, j)].config(text = ' ')
-            else:
-                buttons[(i, j)].config(text = states[(i, j)], bg = 'yellow')
+    a = 0
+    for i in buttons:
+        a += 1
+        if s[a] == 'r':
+            buttons[i].config(text = '#', bg = 'green')
+        elif s[a] == 't':
+            buttons[i].config(text = 'M', bg = 'orange')
+        elif s[a] == '0':
+            buttons[i].config(text = ' ', bg = 'yellow')
+        elif s[a] == '@':
+            buttons[i].config(text = '#')
+        elif s[a] == 'b':
+            buttons[i].config(text = '!', bg = 'red')
+        elif s[a] == '9':
+            buttons[i].config(text = ' ')
+        else:
+            buttons[i].config(text = s[a], bg = 'yellow')
 
 def return_to_start(root, gp, timer):
     global is_changed
@@ -188,7 +176,7 @@ class MineSweeperTimer:
     def __init__(self, gp):
         self.root = gp
         self.timer_label = Label(gp, width = 15, height = 1, text = "time used: 0 secs", font = ("Arial", 30))
-        self.timer_label.place(x = 300, y = 50, anchor = "center")
+        self.timer_label.place(relx =0.02, rely = 0.02, anchor = "nw")
 
         self.time_elapsed = 0
         self.timer_running = False
